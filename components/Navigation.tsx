@@ -9,7 +9,6 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
-  { href: '/products', label: 'Products' },
   { href: '/building', label: "What We're Building" },
   { href: '/contact', label: 'Contact' },
 ];
@@ -78,12 +77,12 @@ export default function Navigation() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative w-10 h-10 transition-transform duration-300 group-hover:scale-105">
+              <div className="relative w-10 h-10 rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-105">
                 <Image
                   src="/wolf-logo.webp"
                   alt="Okami Labs"
                   fill
-                  className="object-contain"
+                  className="object-cover scale-[1.15]"
                 />
               </div>
               <span className="font-mono text-sm tracking-wider uppercase text-off-white">
