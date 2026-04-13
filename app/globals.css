@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-dark: #0a0a0a;
+  --color-off-white: #e8e6e1;
+  --color-ash: #9A918A;
+  --color-slate-blue: #6878A0;
+  --color-burgundy: #8B3A3A;
+
+  /* Override Tailwind's built-in font-mono to use JetBrains */
+  --font-mono: var(--font-jetbrains-face), monospace;
+}
+
+/* Font utilities — using next/font CSS variables directly */
+@utility font-playfair {
+  font-family: var(--font-playfair-face), serif;
+}
+
+@utility font-body {
+  font-family: var(--font-outfit-face), sans-serif;
+}
+
+/* ── Hero animation ── */
+@keyframes hero-surge-transform {
+  0%   { transform: scale(0.91) translateY(10px); filter: blur(4px); }
+  55%  { filter: blur(0.5px); }
+  100% { transform: scale(1) translateY(0); filter: blur(0); }
+}
+@keyframes hero-surge-fade {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes hero-eyebrow-in {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-cta-in {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow,
+.hero-headline,
+.hero-cta {
+  opacity: 0;
+}
+
+.hero-playing .hero-eyebrow {
+  animation: hero-eyebrow-in 0.8s ease forwards 0.15s;
+}
+.hero-playing .hero-headline {
+  animation:
+    hero-surge-transform 1.85s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.35s,
+    hero-surge-fade 2.5s linear forwards 0.35s;
+}
+.hero-playing .hero-cta {
+  animation: hero-cta-in 0.7s ease forwards 1.55s;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #0a0a0a;
+    color: #9A918A;
+    font-family: var(--font-outfit-face), sans-serif;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-playfair-face), serif;
+    color: #e8e6e1;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font-family: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    outline: 2px solid #e8e6e1;
+    outline-offset: 2px;
+  }
+}
+
+/* Reduced motion: disable all custom animations */
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow,
+  .hero-headline,
+  .hero-cta {
+    opacity: 1;
+  }
+
+  .hero-playing .hero-eyebrow,
+  .hero-playing .hero-headline,
+  .hero-playing .hero-cta {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
