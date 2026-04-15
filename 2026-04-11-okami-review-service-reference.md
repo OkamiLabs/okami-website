@@ -1,23 +1,23 @@
 ---
 date: 2026-04-11
 type: service-design
-topic: "Operations Diagnostic Report — Service Reference"
-tags: [okami, operations-diagnostic, service-design, service-packages, pricing]
+topic: "The Okami Review — Service Reference"
+tags: [okami, okami-review, service-design, service-packages, pricing]
 phase: building
 ---
 
-# Operations Diagnostic Report — Service Reference
+# The Okami Review — Service Reference
 
 ## Context
-This note is a comprehensive reference document for Okami's Operations Diagnostic Report — the flagship entry-point service. It captures what the service is, how it's delivered, what the report covers section by section, pricing, and positioning philosophy. Intended as a cold-start document so any future Claude instance can understand the diagnostic end to end without needing prior conversation context.
+This note is a comprehensive reference document for the Okami Review — Okami's flagship entry-point service. It captures what the service is, how it's delivered, what the report covers section by section, pricing, and positioning philosophy. Intended as a cold-start document so any future Claude instance can understand the Okami Review end to end without needing prior conversation context.
 
 ## Summary
-The Operations Diagnostic Report is Okami Consulting's primary service offering and the starting point for every client engagement. It is a structured evaluation of how a business operates — systems, processes, data flow, customer journey, team dependencies — delivered as a branded report that tells the business owner where they stand, what's blocking growth, and what to prioritize next. The diagnostic is positioned as a "let's scale your business" tool, not an AI assessment. AI may appear as one possible output of the diagnostic, but it is never the headline or the reason for the engagement. Pricing is $299, due at checkout, for a 45–60 minute consultation session that serves as the primary input for the report.
+The Okami Review is Okami Consulting's primary service offering and the starting point for every client engagement. It is a structured evaluation of how a business operates — systems, processes, data flow, customer journey, team dependencies — delivered as a branded report that tells the business owner where they stand, what's blocking growth, and what to prioritize next. The diagnostic is positioned as a "let's scale your business" tool, not an AI assessment. AI may appear as one possible output of the diagnostic, but it is never the headline or the reason for the engagement. Pricing is $299, due at checkout, for a 45–60 minute consultation session that serves as the primary input for the report.
 
 ## Key Points
 
 ### Positioning
-- Externally branded as "The Okami Diagnostic" (shorthand) and "Operations Diagnostic Report" (formal document title)
+- Externally branded as "The Okami Review" (shorthand and formal name)
 - Marketed as an operational scaling tool — not a pre-AI assessment
 - AI is one possible recommendation output, not the framing or the hook
 - The diagnostic should never be introduced in isolation — always lead with the problem (most businesses have operational gaps they can't see) and position the diagnostic as the structured answer
@@ -26,7 +26,7 @@ The Operations Diagnostic Report is Okami Consulting's primary service offering 
 ### Pricing & Delivery
 - Price: $299, due at checkout (before the session)
 - Session format: 45–60 minute consultation (primary data-gathering input)
-- Deliverable: branded Operations Diagnostic Report (PDF), delivered after the session
+- Deliverable: branded Okami Review Report (PDF), delivered after the session
 - The session is a structured consult, not a free-form conversation — Lucas drives the session using the framework to gather inputs for each report section
 
 ### Report Structure (13 Sections)
@@ -72,11 +72,11 @@ Separate from the diagnostic content. Brief description of how Okami works (1–
 
 ### Framework Philosophy
 - Operations before AI — the report evaluates foundations first because readiness determines outcomes
-- The diagnostic is the entry point to the Okami relationship: lowest commitment, highest proof of competence
+- The Okami Review is the entry point to the Okami relationship: lowest commitment, highest proof of competence
 - The report itself is the portfolio piece — its quality is the marketing
 - Sections 4 (Maturity Analysis) and 9 (AI Reality Check) are the most uniquely Okami sections and are given full-page treatment
 - The internal writing framework (v2) includes per-section guardrails that define what each section must and must not contain, enabling consistent output and eventual delegation or AI-assisted drafting
 
 ## Decisions
-**Decision**: Price the Operations Diagnostic at $299, due at checkout — **Why**: Needs to cost something to filter for serious prospects and signal professional value, while remaining accessible for small businesses.
+**Decision**: Price The Okami Review at $299, due at checkout — **Why**: Needs to cost something to filter for serious prospects and signal professional value, while remaining accessible for small businesses.
 **Decision**: Session length is 45–60 minutes — **Why**: Enough time to gather meaningful input across all framework sections without overwhelming the business owner or turning it into an open-ended consulting session.

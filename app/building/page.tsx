@@ -33,7 +33,7 @@ export default function BuildingPage() {
             <div className="lg:col-span-4">
               <p className="font-body text-base leading-relaxed text-ash">
                 These are systems built to solve specific operational problems — the kind that
-                show up in almost every diagnostic. Each one removes a bottleneck, recovers lost
+                show up in almost every <span className="font-playfair">Okami Review</span>. Each one removes a bottleneck, recovers lost
                 time, or closes a gap that businesses typically patch with manual effort.
               </p>
             </div>
@@ -247,9 +247,9 @@ export default function BuildingPage() {
                 Stay updated on what's shipping.
               </h2>
               <p className="font-body text-base leading-relaxed text-ash">
-                The Silent Brief covers AI and automation applied to real business problems.
-                New capabilities, deployment milestones, and lessons from building operational
-                systems in production.
+                Get The Operator&apos;s Blueprint — the same scorecard framework Okami uses in every
+                <span className="font-playfair"> Okami Review</span>. Plus ongoing updates on new capabilities and lessons from
+                building operational systems in production.
               </p>
             </div>
             <div>
@@ -264,8 +264,8 @@ export default function BuildingPage() {
 
       {/* Final CTA */}
       <CTASection
-        headline="Want to deploy a system in your operations?"
-        subheadline="Start with a consultation to discuss operational workflows and see where systems that run automatically make sense."
+        headline="Ready to put a system to work?"
+        subheadline="Every Labs engagement starts with the Okami Review — so what gets built fits the business that's actually there."
         buttonText="Book a Consultation"
         buttonHref="/contact"
       />

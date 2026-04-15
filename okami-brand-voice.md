@@ -82,10 +82,10 @@ Okami's presence comes from saying things plainly and confidently, not from soun
 > Okami maps what's actually happening — not what the org chart says. Then it builds the systems that let the business hold together under pressure.
 
 **Too explanatory (avoid):**
-> The Operations Diagnostic is a two-week assessment that identifies bottlenecks and surfaces where your business is stuck, helping you understand what needs to be fixed first.
+> A lengthy assessment that takes weeks and identifies bottlenecks and surfaces where your business is stuck, helping you understand what needs to be fixed first.
 
 **Better:**
-> Two weeks. A full map of how your business actually runs, where it breaks, and what to fix first.
+> A 45-minute conversation. A full map of how your business actually runs, where it breaks, and what to fix first.
 
 ---
 
@@ -93,7 +93,7 @@ Okami's presence comes from saying things plainly and confidently, not from soun
 
 Copy should reflect the visual identity of each section:
 
-- **Consulting / Operations Diagnostic** — Burgundy accent in design. Tone: formal, problem-focused, grounded.
+- **Consulting / The Okami Review** — Burgundy accent in design. Tone: professional, problem-focused, grounded.
 - **Labs / Okami Agent Core** — Slate Blue accent. Tone: technical but outcome-focused. Agents stay invisible; only business results are described.
 
 ---
@@ -103,7 +103,7 @@ Copy should reflect the visual identity of each section:
 These phrases appear throughout the site and reflect core positioning. Use them consistently:
 
 - **"Silent Systems"** — the philosophy. Systems that don't make noise but make waves for the business. Not "Silent Business."
-- **"Operations Diagnostic"** — the starting point for every consulting engagement. Always capitalized. Format: a virtual 45-60 minute structured meeting followed by an extensive report. Not a multi-week assessment.
+- **"The Okami Review"** — the starting point for every consulting engagement. Always capitalized with "The". Format: a 45-60 minute structured meeting followed by a full report. Not a multi-week assessment.
 - **"Okami Agent Core"** — the platform. Not "the platform" generically — this is its name.
 - **"What actually happens"** — contrasted with aspirational documentation or org-chart assumptions.
 - **"Silent Giant"** — Okami itself. Looms, moves deliberately, and the impact is felt.

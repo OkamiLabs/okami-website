@@ -7,7 +7,7 @@
  *   CAL_API_KEY — from cal.com/settings/developer/api-keys
  *
  * Query params:
- *   calLink   e.g. "okami/operations-diagnostic" (username/event-slug)
+ *   calLink   e.g. "okami/okami-review" (username/event-slug)
  *   start     ISO date or datetime (e.g. "2026-04-06")
  *   end       ISO date or datetime (e.g. "2026-04-10")
  *   timeZone  IANA timezone string (e.g. "America/New_York"), defaults to UTC

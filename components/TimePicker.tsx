@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { bootstrapCal, openCalModal } from '@/lib/cal';
 
 interface TimePickerProps {
-  calLink: string; // e.g. "okami/operations-diagnostic"
+  calLink: string; // e.g. "okami/okami-review"
 }
 
 /* ── Date helpers (no external deps) ───────────────────────────── */

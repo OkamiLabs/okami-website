@@ -65,8 +65,8 @@ export default function PrivacyPage() {
             <div className="space-y-4 mb-10">
               <p className="font-body text-base leading-[1.8] text-ash">
                 Name, email, and company information when booking a consultation,
-                submitting a form, or starting a diagnostic. Diagnostic answers provided
-                during the Operations Diagnostic engagement. Any additional context shared
+                submitting a form, or starting a review. Okami Review answers provided
+                during the Okami Review engagement. Any additional context shared
                 about workflows, systems, or automation goals.
               </p>
             </div>
@@ -93,7 +93,7 @@ export default function PrivacyPage() {
             <div className="space-y-4">
               <p className="font-body text-base leading-[1.8] text-ash">
                 To deliver the services requested. To improve products, tools, and the site
-                itself. To communicate about consultations, diagnostic results, or project
+                itself. To communicate about consultations, Okami Review results, or project
                 updates. To monitor performance and security.
               </p>
               <p className="font-mono text-sm text-off-white mt-6">
@@ -196,7 +196,7 @@ export default function PrivacyPage() {
             <div className="w-12 h-[2px] bg-ash/20 mb-8" />
             <p className="font-body text-base leading-[1.8] text-ash mb-6">
               Personal information is retained only as long as necessary. Active accounts
-              and leads are retained while engaged with services. Diagnostic submissions
+              and leads are retained while engaged with services. Okami Review submissions
               are retained for 24 months after submission. Email subscribers are retained
               until they unsubscribe. Analytics data follows standard retention periods.
             </p>

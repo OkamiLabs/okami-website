@@ -103,9 +103,9 @@ export default function TermsPage() {
             </h2>
             <div className="w-12 h-[2px] bg-ash/20 mb-8" />
             <p className="font-body text-base leading-[1.8] text-ash mb-6">
-              The Operations Diagnostic is billed at a fixed rate, payable at the time
+              <span className="font-playfair">The Okami Review</span> is billed at a fixed rate, payable at the time
               of booking through the provided payment link. Consulting engagements
-              beyond the diagnostic are scoped and priced individually.
+              beyond the review are scoped and priced individually.
             </p>
             <p className="font-body text-base leading-[1.8] text-ash">
               All payments are processed securely through Stripe. Okami Consulting LLC
@@ -125,9 +125,9 @@ export default function TermsPage() {
               context.
             </p>
             <p className="font-body text-base leading-[1.8] text-ash">
-              The Operations Diagnostic and all consulting output is advisory in nature.
+              <span className="font-playfair">The Okami Review</span> and all consulting output is advisory in nature.
               Clients should consult with appropriate professionals before making major
-              decisions based on diagnostic findings.
+              decisions based on review findings.
             </p>
           </div>
 
@@ -139,7 +139,7 @@ export default function TermsPage() {
             <div className="w-12 h-[2px] bg-ash/20 mb-8" />
             <p className="font-body text-base leading-[1.8] text-ash mb-6">
               Okami Consulting LLC is not liable for indirect or consequential losses,
-              decisions made based on diagnostic reports, or technical downtime caused by
+              decisions made based on Okami Review reports, or technical downtime caused by
               third-party services.
             </p>
             <p className="font-mono text-sm text-off-white">

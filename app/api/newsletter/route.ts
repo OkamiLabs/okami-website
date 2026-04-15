@@ -51,14 +51,14 @@ async function subscribeViaBeehiiv(email: string): Promise<{ ok: boolean; messag
     body: JSON.stringify({
       email,
       reactivate_existing: true,
-      send_welcome_email: true,
+      send_welcome_email: false,
       utm_source: 'okamilabs.com',
       utm_medium: 'website',
     }),
   });
 
   if (res.status === 200 || res.status === 201) {
-    return { ok: true, message: 'Welcome to The Silent Brief. Check your inbox.' };
+    return { ok: true, message: 'Check your inbox for The Operator\'s Blueprint.' };
   }
 
   if (res.status === 409) {
@@ -89,7 +89,7 @@ async function subscribeViaFallback(email: string): Promise<{ ok: boolean; messa
   subscribers.push(email);
   await fs.writeFile(path, JSON.stringify(subscribers, null, 2));
 
-  return { ok: true, message: 'Welcome to The Silent Brief.' };
+  return { ok: true, message: 'Check your inbox for The Operator\'s Blueprint.' };
 }
 
 export async function POST(request: NextRequest) {

@@ -29,14 +29,14 @@ export const metadata: Metadata = {
     default: 'Okami Labs',
     template: '%s | Okami Labs',
   },
-  description: 'Okami Labs fixes operational foundations before implementing AI. Consulting diagnostics and silent systems that handle the work.',
+  description: 'Okami Labs fixes operational foundations before implementing AI. Consulting and silent systems that handle the work.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://okamilabs.com',
     siteName: 'Okami Labs',
     title: 'Okami Labs — The Silent Giant Behind Modern Business',
-    description: 'Okami Labs fixes operational foundations before implementing AI. Consulting diagnostics and silent systems that handle the work.',
+    description: 'Okami Labs fixes operational foundations before implementing AI. Consulting and silent systems that handle the work.',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Okami Labs' }],
   },
   twitter: {
@@ -69,7 +69,7 @@ export default function RootLayout({
               url: 'https://okamilabs.com',
               logo: 'https://okamilabs.com/wolf-logo.webp',
               description:
-                'Okami Labs fixes operational foundations before implementing AI. Consulting diagnostics and silent systems that handle the work.',
+                'Okami Labs fixes operational foundations before implementing AI. Consulting and silent systems that handle the work.',
               areaServed: {
                 '@type': 'Place',
                 name: 'South Florida',
@@ -80,7 +80,7 @@ export default function RootLayout({
                 'Workflow Automation',
               ],
               knowsAbout: [
-                'Operations Diagnostic',
+                'Okami Review',
                 'Workflow Optimization',
                 'AI Automation',
                 'Business Process Improvement',

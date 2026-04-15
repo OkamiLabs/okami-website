@@ -4,11 +4,11 @@ import { CTASection } from '@/components';
 export const metadata: Metadata = {
   title: 'Consulting',
   description:
-    'Okami Consulting starts with the Operations Diagnostic — a 45-minute conversation that produces a full report on how your business runs, where it breaks, and what to prioritize.',
+    'Okami Consulting starts with The Okami Review — a 45-minute conversation that produces a full report on how your business runs, where it breaks, and what to prioritize.',
   openGraph: {
-    title: 'Okami Consulting — Operations Diagnostic',
+    title: 'Okami Consulting — The Okami Review',
     description:
-      'Every engagement starts with the Operations Diagnostic. A 45-minute conversation that maps how your business runs, where it breaks, and what to fix first.',
+      'Every engagement starts with The Okami Review. A 45-minute conversation that maps how your business runs, where it breaks, and what to fix first.',
   },
 };
 
@@ -32,16 +32,17 @@ export default function ServicesPage() {
             </div>
             <div className="lg:col-span-4">
               <p className="font-body text-base leading-relaxed text-ash">
-                Okami Consulting doesn't arrive with a predetermined solution. Every engagement
-                begins with the Operations Diagnostic, a 45-minute conversation that produces a
-                full report on how your business runs, where it breaks, and what to prioritize.
+                Okami Consulting starts where most consulting skips to the end — with what's
+                actually happening. Every engagement begins with <span className="font-playfair">the Okami Review</span>: a 45-minute
+                conversation that produces a full report on how your business runs, where it
+                breaks, and what to prioritize.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Operations Diagnostic — Centerpiece */}
+      {/* The Okami Review — Centerpiece */}
       <section className="border-b border-ash/10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-burgundy/[0.03] to-transparent pointer-events-none" />
 
@@ -49,7 +50,7 @@ export default function ServicesPage() {
           <div className="grid lg:grid-cols-12 gap-16">
             <div className="lg:col-span-7">
               <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl leading-[1.1] text-off-white mb-6">
-                The Operations Diagnostic.
+                The Okami Review.
               </h2>
 
               <p className="font-mono text-lg text-burgundy mb-12">
@@ -58,7 +59,7 @@ export default function ServicesPage() {
 
               <div className="space-y-6 mb-12">
                 <p className="font-body text-base leading-relaxed text-ash">
-                  The Operations Diagnostic is a 45-minute structured conversation followed by a
+                  <span className="font-playfair">The Okami Review</span> is a 45-minute structured conversation followed by a
                   full report. It maps how your business actually runs, where it breaks, and what
                   to fix first. Not what the org chart says. What actually happens.
                 </p>
@@ -73,7 +74,7 @@ export default function ServicesPage() {
                 href="/contact"
                 className="inline-block px-8 py-4 bg-burgundy text-off-white font-mono text-sm uppercase tracking-wider hover:bg-burgundy/90 transition-colors"
               >
-                Book Your Diagnostic
+                Request Your Okami Review
               </a>
             </div>
 
@@ -131,11 +132,11 @@ export default function ServicesPage() {
               {
                 num: '01',
                 title: 'Talk',
-                desc: 'An initial conversation to understand your operational challenges and where growth is getting stuck. This sets the scope for the diagnostic.',
+                desc: 'An initial conversation to understand your operational challenges and where growth is getting stuck. This sets the scope for the Okami Review.',
               },
               {
                 num: '02',
-                title: 'Diagnostic Report',
+                title: 'The Okami Review',
                 desc: 'A 45-minute structured conversation followed by a full report. Everything mapped. Everything prioritized. Clear next steps regardless of what comes after.',
               },
               {
@@ -223,8 +224,8 @@ export default function ServicesPage() {
 
       {/* Final CTA */}
       <CTASection
-        headline="Start with the diagnostic."
-        subheadline="Every engagement begins with understanding the operational reality. Book a consultation to talk through your workflows and see if the Operations Diagnostic is the right starting point."
+        headline="Start with the Okami Review."
+        subheadline="Fifteen minutes to talk through your workflows and see if the Okami Review is the right fit. No pitch."
         buttonText="Book Your Consultation"
         buttonHref="/contact"
         buttonVariant="secondary"

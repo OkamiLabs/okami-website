@@ -43,7 +43,7 @@ Two ways to work with Okami.
 Understand what needs fixing.
 
 **Body:**
-Okami Consulting works with businesses to build the operational foundations for growth. Every engagement starts with the Operations Diagnostic. From there, the work begins.
+Okami Consulting works with businesses to build the operational foundations for growth. Every engagement starts with the The Okami Review. From there, the work begins.
 
 **Link:** Learn about Consulting →
 
@@ -61,13 +61,13 @@ Okami Labs works with businesses to build the operational systems they need to s
 
 ---
 
-### Operations Diagnostic Callout
+### The Okami Review Callout
 
 **Headline:**
 Every engagement starts here.
 
 **Body:**
-The Operations Diagnostic is a 45-minute structured conversation followed by a full report. It shows how your business actually runs and where it breaks. That report becomes the foundation for everything that follows.
+The The Okami Review is a 45-minute structured conversation followed by a full report. It shows how your business actually runs and where it breaks. That report becomes the foundation for everything that follows.
 
 **CTA:**
 See How It Works →
@@ -117,7 +117,7 @@ Quarterly updates only. Unsubscribe anytime.
 Start with a conversation.
 
 **Body:**
-Book a 30-minute consultation to talk through what's slowing you down and whether the Operations Diagnostic is the right place to start.
+Book a 30-minute consultation to talk through what's slowing you down and whether the The Okami Review is the right place to start.
 
 **CTA:**
 Book Your Consultation
@@ -163,7 +163,7 @@ That's what Okami builds. Not tools that demand attention or workflows that crea
 ### Final CTA
 
 **Headline:**
-The starting point is the Operations Diagnostic.
+The starting point is the The Okami Review.
 
 **Body:**
 A 45-minute conversation that produces a full picture of how your business runs, where it breaks, and what to fix first.
@@ -181,20 +181,20 @@ Book Your Diagnostic
 Every engagement begins with understanding what's actually happening.
 
 **Subheadline:**
-Okami Consulting doesn't arrive with a predetermined solution. Every engagement begins with the Operations Diagnostic, a 45-minute conversation that produces a full report on how your business runs, where it breaks, and what to prioritize.
+Okami Consulting doesn't arrive with a predetermined solution. Every engagement begins with the The Okami Review, a 45-minute conversation that produces a full report on how your business runs, where it breaks, and what to prioritize.
 
 ---
 
-### Operations Diagnostic Section (Featured/Centerpiece)
+### The Okami Review Section (Featured/Centerpiece)
 
 **Headline:**
-The Operations Diagnostic.
+The The Okami Review.
 
 **Subheadline:**
 The clearest picture of how your business runs.
 
 **Body:**
-The Operations Diagnostic is a 45-minute structured conversation followed by a full report. It maps how your business actually runs, where it breaks, and what to fix first. Not what the org chart says. What actually happens.
+The The Okami Review is a 45-minute structured conversation followed by a full report. It maps how your business actually runs, where it breaks, and what to fix first. Not what the org chart says. What actually happens.
 
 The report tells you exactly where you stand, what's working, what's breaking, and what to address first. Whether that leads to process improvement, system changes, or understanding where technology actually helps.
 
@@ -287,7 +287,7 @@ Okami Consulting is operational work. Detailed. Sometimes tedious. Always focuse
 Start with the diagnostic.
 
 **Body:**
-Every engagement begins with understanding the operational reality. Book a consultation to talk through your workflows and see if the Operations Diagnostic is the right starting point.
+Every engagement begins with understanding the operational reality. Book a consultation to talk through your workflows and see if the The Okami Review is the right starting point.
 
 **CTA:**
 Book Your Consultation
@@ -541,7 +541,7 @@ Book a Consultation
 ### Hero Section
 
 **Headline:**
-The Operations Diagnostic starts here.
+The The Okami Review starts here.
 
 **Subheadline:**
 Book a 45-minute conversation. Walk away with a full report on how your business runs, where it breaks, and what to fix first.
@@ -664,7 +664,7 @@ Ash (#9A918A) border, Ash text, transparent background, hover to fill with Ash
 
 ### Color-Coded Contexts
 
-- **Burgundy (#8B3A3A):** Consulting, Operations Diagnostic, Services page
+- **Burgundy (#8B3A3A):** Consulting, The Okami Review, Services page
 - **Slate Blue (#6878A0):** Labs, Okami Agent Core, Products page, capability cards
 - **Ash (#9A918A):** Neutral elements, body text, ghost buttons
 - **Off-white (#e8e6e1):** Headings, high-emphasis text

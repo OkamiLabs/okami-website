@@ -99,9 +99,9 @@ The most important page. Does 80% of the work. Most visitors won't go deeper.
 - Labs (right, Slate Blue tag): one-sentence description + link to Products page
 - Visitor understands: you advise AND you build
 
-**Section 4 — Operations Diagnostic Callout**
+**Section 4 — The Okami Review Callout**
 
-- Brief feature block introducing the diagnostic as the tangible starting point
+- Brief feature block introducing the review as the tangible starting point
 - "This is how every engagement starts"
 - Links to the Services page for detail
 - Not a full description — just enough to signal substance
@@ -167,7 +167,7 @@ Where the human story lives. Establishes why Okami exists and why the founder is
 
 ### Page 3: Services (Consulting)
 
-Okami Consulting's page. Communicates approach and philosophy without locking into a rigid service menu. Operations Diagnostic is the one concrete feature.
+Okami Consulting's page. Communicates approach and philosophy without locking into a rigid service menu. The Okami Review is the one concrete feature.
 
 **Section 1 — Consulting Philosophy**
 
@@ -176,13 +176,13 @@ Okami Consulting's page. Communicates approach and philosophy without locking in
 - Most businesses skip this step. Okami doesn't
 - 3-4 sentences, brand voice
 
-**Section 2 — Operations Diagnostic (Featured)**
+**Section 2 — The Okami Review (Featured)**
 
 - Centerpiece of the page — give it room
 - What it is, what a client gets, how it works at a high level
 - Framing: "This is where every engagement starts"
-- Positions the diagnostic as entry point, not standalone product
-- **Visual proof point:** Placeholder for slide deck preview (swap in real diagnostic output when ready)
+- Positions the review as entry point, not standalone product
+- **Visual proof point:** Placeholder for slide deck preview (swap in real review output when ready)
 - Burgundy accent carries this section
 
 **Section 3 — Areas of Focus**
@@ -325,7 +325,7 @@ The simplest page. One path, no ambiguity.
 | Brand voice (not first person)           | "Present but understated" — company feels bigger without pretending                                  |
 | No direct email on Contact               | One conversion path. Booking only. Confidence through focus                                          |
 | Business scenarios over agent names      | Business owners care about outcomes, not architecture. Technical depth lives on Products page        |
-| Operations Diagnostic as entry point     | "Every engagement starts here" — makes one offering feel like the beginning of something bigger      |
-| Slide deck placeholder for diagnostic    | Swap in real output when ready — page levels up without structural changes                           |
+| The Okami Review as entry point         | "Every engagement starts here" — makes one offering feel like the beginning of something bigger      |
+| Slide deck placeholder for review        | Swap in real output when ready — page levels up without structural changes                           |
 | Combined palette over single accent      | Three colors with clear roles prevent monotony across six pages                                      |
 | Burgundy = Consulting, Slate Blue = Labs | Subtle visual distinction reinforces the two-arm structure without separate branding                 |

@@ -7,7 +7,7 @@
 
 ## Status
 
-**Updated April 11, 2026:** All blockers, quality fixes, and infrastructure items below have been implemented. Stripe checkout flow for the Operations Diagnostic ($299) has been added. The site is ready for deploy. Remaining steps: set environment variables (Cal.com URL, Stripe Payment Link, Zoho credentials), run `npm run build` locally, and push to Vercel.
+**Updated April 11, 2026:** All blockers, quality fixes, and infrastructure items below have been implemented. Stripe checkout flow for The Okami Review ($299) has been added. The site is ready for deploy. Remaining steps: set environment variables (Cal.com URL, Stripe Payment Link, Zoho credentials), run `npm run build` locally, and push to Vercel.
 
 ~~The site is fully built: six pages, ten components, design system, and all copy in place. It builds clean on Next.js 16. What remains falls into four categories: blockers (site can't launch without these), quality (should fix before launch), infrastructure (SEO, security, analytics), and deploy.~~
 
@@ -201,13 +201,13 @@ Confirm `.env.local` is in `.gitignore` (should be via Next.js defaults).
 
 ---
 
-## 4. Checkout — Operations Diagnostic ($299)
+## 4. Checkout — The Okami Review ($299)
 
-Stripe handles payment for the Operations Diagnostic. The flow: CTA → Stripe checkout → payment → redirect to `/contact?checkout=success` → book Cal.com session.
+Stripe handles payment for The Okami Review. The flow: CTA → Stripe checkout → payment → redirect to `/contact?checkout=success` → book Cal.com session.
 
 ### 4.1 Stripe setup (complete)
 
-- **Product:** Operations Diagnostic Report (`prod_UJrIHHv1Zns1h8`)
+- **Product:** The Okami Review (`prod_UJrIHHv1Zns1h8`)
 - **Price:** $299 USD, one-time (`price_1TLDaKCcQ56cGxx0loC3xwCA`)
 - **Payment Link:** `plink_1TLDaeCcQ56cGxx0TVnEJjIT`
   - URL: `https://book.stripe.com/28E3cu58M1U835F7b17AI00`

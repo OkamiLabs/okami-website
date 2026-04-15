@@ -40,55 +40,69 @@ export default function NewsletterForm() {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="mb-6">
-        <span className="font-mono text-xs uppercase tracking-widest text-ash/60 block mb-1">
-          Newsletter
-        </span>
-        <span className="font-playfair text-lg text-off-white italic">
-          The Silent Brief
-        </span>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="newsletter-email" className="sr-only">
-            Email address
-          </label>
-          <input
-            type="email"
-            id="newsletter-email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            required
-            disabled={status === 'loading'}
-            className="w-full px-6 py-4 bg-dark border border-ash/20 text-off-white font-mono text-sm placeholder:text-ash/50 focus:outline-none focus:border-off-white transition-colors disabled:opacity-50"
-          />
-        </div>
-
-        <Button
-          type="submit"
-          variant="ghost"
-          className="w-full"
-          onClick={undefined}
-        >
-          {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
-        </Button>
-
-        {message && (
-          <p
-            className={`font-mono text-sm text-center ${
-              status === 'success' ? 'text-slate-blue' : 'text-ash'
-            }`}
-          >
-            {message}
+      {status === 'success' ? (
+        <div className="text-center space-y-4">
+          <span className="font-playfair text-lg text-off-white italic block">
+            You&apos;re in.
+          </span>
+          <p className="font-body text-sm text-ash leading-relaxed">
+            Check your inbox for <span className="text-off-white">The Operator&apos;s Blueprint</span> — a
+            framework for seeing where your business actually stands before adding tools or
+            technology.
           </p>
-        )}
-      </form>
+          <p className="font-mono text-xs text-ash/60">
+            Didn&apos;t get it? Check your spam folder or promotions tab.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="mb-6">
+            <span className="font-mono text-xs uppercase tracking-widest text-ash/60 block mb-1">
+              Newsletter
+            </span>
+            <span className="font-playfair text-lg text-off-white italic">
+              The Silent Brief
+            </span>
+          </div>
 
-      <p className="mt-6 font-mono text-xs text-ash text-center leading-relaxed">
-        Operational intelligence for businesses that scale quietly.
-      </p>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="newsletter-email" className="sr-only">
+                Email address
+              </label>
+              <input
+                type="email"
+                id="newsletter-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+                disabled={status === 'loading'}
+                className="w-full px-6 py-4 bg-dark border border-ash/20 text-off-white font-mono text-sm placeholder:text-ash/50 focus:outline-none focus:border-off-white transition-colors disabled:opacity-50"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              variant="ghost"
+              className="w-full"
+              onClick={undefined}
+            >
+              {status === 'loading' ? 'Subscribing...' : 'Get The Operator\'s Blueprint'}
+            </Button>
+
+            {status === 'error' && message && (
+              <p className="font-mono text-sm text-center text-ash">
+                {message}
+              </p>
+            )}
+          </form>
+
+          <p className="mt-6 font-mono text-xs text-ash text-center leading-relaxed">
+            Subscribe and get the scorecard Okami uses in every <span className="font-playfair">Okami Review</span> — free.
+          </p>
+        </>
+      )}
     </div>
   );
 }

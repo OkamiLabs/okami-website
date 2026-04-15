@@ -5,9 +5,9 @@ import TimePicker from './TimePicker';
 
 const SERVICES = [
   {
-    id: 'diagnostic',
-    name: 'Operations Diagnostic',
-    calLink: 'okami/operations-diagnostic',
+    id: 'review',
+    name: 'The Okami Review',
+    calLink: 'okami/okami-review',
     duration: '60 min',
     description:
       'A structured conversation that maps how your business runs, where it breaks, and what to fix first. You receive a full report with prioritized recommendations.',
@@ -18,14 +18,14 @@ const SERVICES = [
     calLink: 'okami/discovery-call',
     duration: '15 min',
     description:
-      "A 15-minute conversation to talk through what's slowing you down and whether the Operations Diagnostic is the right place to start.",
+      "A 15-minute conversation to talk through what's slowing you down and whether The Okami Review is the right place to start.",
   },
 ] as const;
 
 type ServiceId = (typeof SERVICES)[number]['id'];
 
 export default function BookingSelector() {
-  const [selected, setSelected] = useState<ServiceId>('diagnostic');
+  const [selected, setSelected] = useState<ServiceId>('review');
 
   const active = SERVICES.find((s) => s.id === selected)!;
 

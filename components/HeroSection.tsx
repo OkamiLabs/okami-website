@@ -14,7 +14,7 @@ export default function HeroSection() {
   return (
     <section
       ref={ref}
-      className="min-h-screen flex items-center justify-center px-6 lg:px-8 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center px-6 lg:px-8 pt-20 relative overflow-hidden"
     >
       {/* Atmosphere: dual radial glow */}
       <div

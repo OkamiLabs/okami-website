@@ -161,7 +161,7 @@ In `app/services/page.tsx`, the final CTASection call:
 // FROM:
 <CTASection
   headline="Start with the diagnostic."
-  subheadline="Every engagement begins with understanding the operational reality. Book a consultation to talk through your workflows and see if the Operations Diagnostic is the right starting point."
+  subheadline="Every engagement begins with understanding the operational reality. Book a consultation to talk through your workflows and see if The Okami Review is the right starting point."
   buttonText="Book Your Consultation"
   buttonHref="/contact"
 />
@@ -169,7 +169,7 @@ In `app/services/page.tsx`, the final CTASection call:
 // TO:
 <CTASection
   headline="Start with the diagnostic."
-  subheadline="Every engagement begins with understanding the operational reality. Book a consultation to talk through your workflows and see if the Operations Diagnostic is the right starting point."
+  subheadline="Every engagement begins with understanding the operational reality. Book a consultation to talk through your workflows and see if The Okami Review is the right starting point."
   buttonText="Book Your Consultation"
   buttonHref="/contact"
   buttonVariant="secondary"
@@ -183,17 +183,17 @@ In `app/about/page.tsx`, the final CTASection call:
 ```tsx
 // FROM:
 <CTASection
-  headline="The starting point is the Operations Diagnostic."
+  headline="Start with The Okami Review."
   subheadline="A 45-minute conversation that produces a full picture of how your business runs, where it breaks, and what to fix first."
-  buttonText="Book Your Diagnostic"
+  buttonText="Request Your Okami Review"
   buttonHref="/contact"
 />
 
 // TO:
 <CTASection
-  headline="The starting point is the Operations Diagnostic."
+  headline="Start with The Okami Review."
   subheadline="A 45-minute conversation that produces a full picture of how your business runs, where it breaks, and what to fix first."
-  buttonText="Book Your Diagnostic"
+  buttonText="Request Your Okami Review"
   buttonHref="/contact"
   buttonVariant="secondary"
 />

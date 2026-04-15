@@ -18,7 +18,7 @@ export default function CheckoutSuccess() {
           You're in. Now let's book your session.
         </h2>
         <p className="font-body text-base text-ash max-w-xl mx-auto leading-relaxed">
-          Your Operations Diagnostic payment has been received. Select a time below for your
+          Your <span className="font-playfair">Okami Review</span> payment has been received. Select a time below for your
           45–60 minute session. You'll receive a confirmation email with details once booked.
         </p>
       </div>

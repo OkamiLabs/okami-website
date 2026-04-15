@@ -6,11 +6,11 @@ import CheckoutSuccess from '@/components/CheckoutSuccess';
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Book a 45-minute Operations Diagnostic. Walk away with a full report on how your business runs, where it breaks, and what to fix first.',
+    'Book a 45-minute Okami Review. Walk away with a full report on how your business runs, where it breaks, and what to fix first.',
   openGraph: {
-    title: 'Book Your Operations Diagnostic — Okami Labs',
+    title: 'Request Your Okami Review — Okami Labs',
     description:
-      'Book a 45-minute Operations Diagnostic. Walk away with a full report on how your business runs, where it breaks, and what to fix first.',
+      'Book a 45-minute Okami Review. Walk away with a full report on how your business runs, where it breaks, and what to fix first.',
   },
 };
 
@@ -27,10 +27,10 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-6 py-32 lg:py-40">
           <div className="max-w-4xl">
             <h1 className="font-playfair text-5xl md:text-6xl lg:text-8xl text-off-white mb-6 leading-[1.05]">
-              The Operations Diagnostic starts here.
+              The Okami Review starts here.
             </h1>
             <p className="font-body text-lg md:text-xl text-ash max-w-2xl leading-relaxed">
-              Book the full diagnostic, or start with a 15-minute discovery call if you want to
+              Book the full review, or start with a 15-minute discovery call if you want to
               talk through fit first.
             </p>
           </div>
@@ -44,11 +44,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* What the Diagnostic Covers */}
+      {/* What the Okami Review Covers */}
       <section className="py-24 md:py-32 px-6 lg:px-8 border-b border-ash/10">
         <div className="max-w-7xl mx-auto">
           <h2 className="font-playfair text-3xl md:text-4xl text-off-white mb-16 text-center">
-            What the diagnostic covers.
+            What the Okami Review covers.
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ash/10">
@@ -56,11 +56,11 @@ export default function ContactPage() {
               {
                 num: '01',
                 title: 'Talk',
-                desc: 'A free 15-minute discovery call to understand your operational challenges and confirm the Operations Diagnostic is the right starting point.',
+                desc: 'A free 15-minute discovery call to understand your operational challenges and confirm The Okami Review is the right starting point.',
               },
               {
                 num: '02',
-                title: 'Diagnostic Report',
+                title: 'The Okami Review',
                 desc: 'A 45-minute structured conversation followed by a full report. Everything mapped. Everything prioritized. Clear next steps regardless of what comes after.',
               },
               {
@@ -92,8 +92,9 @@ export default function ContactPage() {
                 Or stay in touch without booking.
               </h2>
               <p className="font-body text-base text-ash leading-relaxed">
-                The Silent Brief covers AI and automation applied to real business problems.
-                Focused, no filler, respects your time. Just operational intelligence.
+                Get The Operator&apos;s Blueprint — the same scorecard framework Okami uses in every
+                <span className="font-playfair"> Okami Review</span>. See where your business stands, plus ongoing operational
+                intelligence. No filler.
               </p>
             </div>
             <div>

@@ -57,7 +57,7 @@ export default function Home() {
             <Card
               tag="Consulting"
               title="Understand what needs fixing."
-              description="Okami Consulting works with businesses to build the operational foundations for growth. Every engagement starts with the Operations Diagnostic. From there, the work begins."
+              description="Okami Consulting works with businesses to build the operational foundations for growth. Every engagement starts with The Okami Review. From there, the work begins."
               href="/services"
               linkText="Learn about Consulting"
               accent="burgundy"
@@ -74,7 +74,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Operations Diagnostic Callout */}
+      {/* The Okami Review Callout */}
       <section className="py-24 md:py-32 px-6 lg:px-8 border-t border-ash/10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-burgundy/[0.04] to-transparent pointer-events-none" />
 
@@ -91,7 +91,7 @@ export default function Home() {
                 Every engagement starts here.
               </h2>
               <p className="font-body text-base md:text-lg text-ash leading-relaxed mb-8">
-                The Operations Diagnostic is a 45-minute structured conversation followed by a
+                <span className="font-playfair">The Okami Review</span> is a 45-minute structured conversation followed by a
                 full report. It shows how your business actually runs and where it breaks. That
                 report becomes the foundation for everything that follows.
               </p>
@@ -196,16 +196,17 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <div>
               <h2 className="font-playfair text-4xl md:text-5xl leading-[1.1] text-off-white mb-6">
-                Not ready to book yet?
+                Start with the scorecard.
               </h2>
               <p className="font-body text-base leading-relaxed text-ash">
-                The Silent Brief covers AI and automation applied to real business problems.
-                Focused, no filler, respects your time. Just operational intelligence.
+                Get The Operator&apos;s Blueprint — the same scorecard framework Okami uses in every
+                <span className="font-playfair"> Okami Review</span>. See where your business actually stands before adding
+                tools or technology.
               </p>
             </div>
             <div>
               <NewsletterForm />
-              <p className="font-mono text-xs text-ash mt-4">
+              <p className="font-mono text-xs text-ash mt-4 text-center">
                 No spam. Unsubscribe anytime.
               </p>
             </div>
@@ -216,7 +217,7 @@ export default function Home() {
       {/* Final CTA */}
       <CTASection
         headline="Start with a conversation."
-        subheadline="Start with a free 15-minute discovery call to talk through what's slowing you down and whether the Operations Diagnostic is the right next step."
+        subheadline="Fifteen minutes to talk through what's slowing you down. No pitch — just a read on whether the Okami Review is the right fit."
         buttonText="Book Your Consultation"
         buttonHref="/contact"
       />

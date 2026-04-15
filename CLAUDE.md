@@ -54,7 +54,7 @@ Six pages total:
 
 1. **Home** - Does 80% of the work, most visitors won't go deeper
 2. **About** - Human story, philosophy, founder background
-3. **Services (Consulting)** - Consulting approach, Operations Diagnostic as centerpiece
+3. **Services (Consulting)** - Consulting approach, The Okami Review as centerpiece
 4. **Products (Labs)** - Okami Agent Core platform, capability areas
 5. **What We're Building** - Shows momentum, business outcomes (not technical details)
 6. **Contact** - Cal.com embed only, no contact form or direct email
@@ -81,13 +81,13 @@ Six pages total:
 - Hero captures Silent Business philosophy
 - Problem section: noisy AI adoption without operational change
 - Two Arms section: Consulting (Burgundy) + Labs (Slate Blue)
-- Operations Diagnostic callout as tangible starting point
+- The Okami Review callout as tangible starting point
 - Credibility signal: web dev + IT ops + AI systems background
 - Philosophy anchor as pull quote
 
 **Services Page (Consulting):**
 
-- Operations Diagnostic is the centerpiece - where every engagement starts
+- The Okami Review is the centerpiece - where every engagement starts
 - Placeholder for slide deck preview (swap in real output when ready)
 - Areas of focus are capability zones, not packaged services
 - Simple three-step flow: Talk → Diagnose → Recommend

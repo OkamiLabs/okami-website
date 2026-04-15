@@ -94,9 +94,9 @@ export default function AboutPage() {
 
       {/* Final CTA */}
       <CTASection
-        headline="The starting point is the Operations Diagnostic."
+        headline="Start with The Okami Review."
         subheadline="A 45-minute conversation that produces a full picture of how your business runs, where it breaks, and what to fix first."
-        buttonText="Book Your Diagnostic"
+        buttonText="Request Your Okami Review"
         buttonHref="/contact"
         buttonVariant="secondary"
       />

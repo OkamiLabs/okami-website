@@ -57,7 +57,7 @@ export function bootstrapCal(): void {
  * and goes straight to the booking form with that time pre-selected.
  * Falls back to opening the Cal.com page in a new tab if the modal can't fire.
  *
- * @param calLink  e.g. "okami/operations-diagnostic"
+ * @param calLink  e.g. "okami/okami-review"
  * @param slot     optional ISO datetime string of the selected slot (e.g. "2026-04-13T09:00:00.000-04:00")
  */
 export function openCalModal(calLink: string, slot?: string): void {
