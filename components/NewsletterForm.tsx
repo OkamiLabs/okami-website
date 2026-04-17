@@ -86,7 +86,7 @@ export default function NewsletterForm() {
               type="submit"
               variant="ghost"
               className="w-full"
-              onClick={undefined}
+              disabled={status === 'loading'}
             >
               {status === 'loading' ? 'Subscribing...' : 'Get The Operator\'s Blueprint'}
             </Button>
@@ -99,7 +99,7 @@ export default function NewsletterForm() {
           </form>
 
           <p className="mt-6 font-mono text-xs text-ash text-center leading-relaxed">
-            Subscribe and get the scorecard Okami uses in every <span className="font-playfair">Okami Review</span> — free.
+            Subscribe and get the scorecard Okami uses in every review — free.
           </p>
         </>
       )}

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import BookFlow from '@/components/book/BookFlow';
-import BookTopBar from '@/components/book/BookTopBar';
 
 export const metadata: Metadata = {
   title: 'Book the Okami Review',
@@ -25,7 +24,6 @@ export default async function BookPage({ searchParams }: PageProps) {
 
   return (
     <main className="min-h-screen bg-dark">
-      <BookTopBar />
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24">
         <BookFlow
           stripePublishableKey={publishableKey}

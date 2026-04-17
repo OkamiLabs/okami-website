@@ -37,3 +37,9 @@ next-env.d.ts
 
 # brainstorm sessions
 .superpowers/
+
+# playwright mcp
+.playwright-mcp/
+
+# local screenshots
+/*.png

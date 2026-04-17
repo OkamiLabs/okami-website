@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import Button from '../Button';
 import FormField from './FormField';
+import { trackPartialBooking } from '@/lib/track-partial-booking';
 
 export type ServiceId = 'review' | 'discovery';
 
@@ -30,6 +31,7 @@ export const EMPTY_INTAKE: IntakeValues = {
 
 interface IntakeStepProps {
   serviceId: ServiceId;
+  slotIso: string | null;
   initialValues: IntakeValues;
   onSubmit: (values: IntakeValues) => void;
   onBack: () => void;
@@ -85,6 +87,7 @@ function validate(values: IntakeValues, serviceId: ServiceId): Errors {
 
 export default function IntakeStep({
   serviceId,
+  slotIso,
   initialValues,
   onSubmit,
   onBack,
@@ -111,8 +114,22 @@ export default function IntakeStep({
 
   function onBlurField(key: FieldKey) {
     setTouched((t) => ({ ...t, [key]: true }));
-    // Validate this field only on blur (first-time), or use full validation if already attempted
     setErrors(validate(values, serviceId));
+
+    if (key === 'email' && EMAIL_RE.test(values.email.trim())) {
+      trackPartialBooking({
+        email: values.email.trim(),
+        serviceId,
+        slotIso,
+        step: 'intake',
+        intake: {
+          name: values.name,
+          company: values.company,
+          role: values.role,
+          challenge: values.challenge,
+        },
+      });
+    }
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

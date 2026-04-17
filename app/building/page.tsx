@@ -33,7 +33,7 @@ export default function BuildingPage() {
             <div className="lg:col-span-4">
               <p className="font-body text-base leading-relaxed text-ash">
                 These are systems built to solve specific operational problems — the kind that
-                show up in almost every <span className="font-playfair">Okami Review</span>. Each one removes a bottleneck, recovers lost
+                show up in almost every review. Each one removes a bottleneck, recovers lost
                 time, or closes a gap that businesses typically patch with manual effort.
               </p>
             </div>
@@ -248,7 +248,7 @@ export default function BuildingPage() {
               </h2>
               <p className="font-body text-base leading-relaxed text-ash">
                 Get The Operator&apos;s Blueprint — the same scorecard framework Okami uses in every
-                <span className="font-playfair"> Okami Review</span>. Plus ongoing updates on new capabilities and lessons from
+                 review. Plus ongoing updates on new capabilities and lessons from
                 building operational systems in production.
               </p>
             </div>

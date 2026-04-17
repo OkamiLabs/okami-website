@@ -103,7 +103,7 @@ export default function TermsPage() {
             </h2>
             <div className="w-12 h-[2px] bg-ash/20 mb-8" />
             <p className="font-body text-base leading-[1.8] text-ash mb-6">
-              <span className="font-playfair">The Okami Review</span> is billed at a fixed rate, payable at the time
+              <span className="font-playfair italic text-off-white">The Okami Review</span> is billed at a fixed rate, payable at the time
               of booking through the provided payment link. Consulting engagements
               beyond the review are scoped and priced individually.
             </p>
@@ -125,7 +125,7 @@ export default function TermsPage() {
               context.
             </p>
             <p className="font-body text-base leading-[1.8] text-ash">
-              <span className="font-playfair">The Okami Review</span> and all consulting output is advisory in nature.
+              <span className="font-playfair italic text-off-white">The Okami Review</span> and all consulting output is advisory in nature.
               Clients should consult with appropriate professionals before making major
               decisions based on review findings.
             </p>

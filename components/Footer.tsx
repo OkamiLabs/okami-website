@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 export default function Footer() {
   const pathname = usePathname();
 
-  if (pathname.startsWith('/book')) return null;
+  if (pathname.startsWith('/book/confirmed') || pathname.startsWith('/book/cancelled')) return null;
 
   const currentYear = new Date().getFullYear();
 

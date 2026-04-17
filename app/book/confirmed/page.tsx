@@ -9,7 +9,7 @@ import { reconcileBookingFromIntent, ReconcileError } from '@/lib/booking-flow';
 
 export const metadata: Metadata = {
   title: 'Booking Confirmed',
-  description: 'Your Okami Review is booked.',
+  description: 'Your review is booked.',
   robots: { index: false, follow: false },
 };
 
@@ -212,7 +212,7 @@ export default async function ConfirmedPage({ searchParams }: PageProps) {
               body:
                 result.service === 'discovery'
                   ? "After the call you'll have a clear read on fit and what a full engagement could look like."
-                  : "Within 7 business days you'll receive the full Okami Review report — everything mapped, prioritized, and ready to act on.",
+                  : "Within 7 business days you'll receive your full review — everything mapped, prioritized, and ready to act on.",
             },
           ].map((item, i) => (
             <div

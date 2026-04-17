@@ -96,7 +96,7 @@ export default function AboutPage() {
       <CTASection
         headline="Start with The Okami Review."
         subheadline="A 45-minute conversation that produces a full picture of how your business runs, where it breaks, and what to fix first."
-        buttonText="Request Your Okami Review"
+        buttonText="Request Your Review"
         buttonHref="/book"
         buttonVariant="consulting"
       />

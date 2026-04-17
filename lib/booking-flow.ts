@@ -83,7 +83,7 @@ export async function reconcileBookingFromIntent(
   const m = pi.metadata ?? {};
   const { slotIso, timeZone, name, email, company, role, companySize, challenge, revenueStage, howHeard, serviceId } = m;
 
-  if (!slotIso || !name || !email || !role || !challenge) {
+  if (!slotIso || !name || !email || !challenge) {
     throw new ReconcileError(
       'metadata_missing',
       'PaymentIntent metadata is missing required booking fields.',

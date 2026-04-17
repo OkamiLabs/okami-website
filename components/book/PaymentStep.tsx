@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'next/navigation';
 import Button from '../Button';
 import type { IntakeValues, ServiceId } from './IntakeStep';
+import { trackPartialBooking } from '@/lib/track-partial-booking';
 
 /* ── Okami-native Stripe Elements appearance ──────────────────────────
    The detail that makes Stripe fields indistinguishable from Okami-native
@@ -242,7 +243,15 @@ function PaymentForm({
       return;
     }
 
-    // Success — clear session state, push to confirmation
+    // Success — mark conversion, clear session, push to confirmation
+    trackPartialBooking({
+      email: bookingPayload.intake.email.trim(),
+      serviceId: bookingPayload.serviceId,
+      slotIso: bookingPayload.slotIso,
+      step: 'payment',
+      intake: {},
+      converted: true,
+    });
     try {
       window.sessionStorage.removeItem('okami:book:state');
     } catch {
@@ -337,6 +346,21 @@ function PaymentForm({
       <p className="font-mono text-[10px] tracking-[0.18em] text-ash/40 mt-6 max-w-md">
         Payments processed by Stripe. Okami never stores card details.
       </p>
+
+      <div className="mt-6 pt-6 border-t border-ash/10 max-w-md">
+        <p className="font-mono text-[10px] tracking-[0.18em] text-ash/40 leading-[1.8]">
+          Reschedule free of charge up to 24 hours before your session.
+          Cancellations within 24 hours are non-refundable.
+          No-shows are treated as completed sessions.
+          Questions? Email{' '}
+          <a
+            href="mailto:hello@okamilabs.com"
+            className="text-ash/60 underline underline-offset-2 hover:text-ash transition-colors"
+          >
+            hello@okamilabs.com
+          </a>
+        </p>
+      </div>
     </form>
   );
 }

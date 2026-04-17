@@ -33,7 +33,7 @@ export default function ServicesPage() {
             <div className="lg:col-span-4">
               <p className="font-body text-base leading-relaxed text-ash">
                 Okami Consulting starts where most consulting skips to the end — with what's
-                actually happening. Every engagement begins with <span className="font-playfair">the Okami Review</span>: a 45-minute
+                actually happening. Every engagement begins with <span className="font-playfair italic text-off-white">the Okami Review</span>: a 45-minute
                 conversation that produces a full report on how your business runs, where it
                 breaks, and what to prioritize.
               </p>
@@ -59,7 +59,7 @@ export default function ServicesPage() {
 
               <div className="space-y-6 mb-12">
                 <p className="font-body text-base leading-relaxed text-ash">
-                  <span className="font-playfair">The Okami Review</span> is a 45-minute structured conversation followed by a
+                  <span className="font-playfair italic text-off-white">The Okami Review</span> is a 45-minute structured conversation followed by a
                   full report. It maps how your business actually runs, where it breaks, and what
                   to fix first. Not what the org chart says. What actually happens.
                 </p>
@@ -71,7 +71,7 @@ export default function ServicesPage() {
               </div>
 
               <Button href="/book" variant="consulting" size="lg">
-                Request Your Okami Review
+                Request Your Review
               </Button>
             </div>
 
@@ -222,8 +222,8 @@ export default function ServicesPage() {
       {/* Final CTA */}
       <CTASection
         headline="Start with the Okami Review."
-        subheadline="Fifteen minutes to talk through your workflows and see if the Okami Review is the right fit. No pitch."
-        buttonText="Book Your Consultation"
+        subheadline="Fifteen minutes to talk through your workflows and see if the review is the right fit. No pitch."
+        buttonText="Book your Review"
         buttonHref="/book"
         buttonVariant="consulting"
       />

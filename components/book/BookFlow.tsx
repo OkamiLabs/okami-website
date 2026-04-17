@@ -7,6 +7,8 @@ import OrderSummary, { type SummaryService, type SummarySlot } from './OrderSumm
 import BookingStep, { type ServiceConfig } from './BookingStep';
 import IntakeStep, { EMPTY_INTAKE, type IntakeValues } from './IntakeStep';
 import PaymentStep from './PaymentStep';
+import BookTopBar from './BookTopBar';
+import { trackPartialBooking } from '@/lib/track-partial-booking';
 
 /* ── Service catalog ──────────────────────────────────────────────── */
 
@@ -25,14 +27,14 @@ const SERVICES: readonly ServiceConfig[] = [
     calLink: 'okami/discovery-call',
     duration: '15 min',
     description:
-      "A 15-minute conversation to talk through what's slowing you down and whether the Okami Review is the right place to start.",
+      "A 15-minute conversation to talk through what's slowing you down and whether the review is the right place to start.",
   },
 ] as const;
 
 const SUMMARY_SERVICE: Record<'review' | 'discovery', SummaryService> = {
   review: {
     id: 'review',
-    name: 'Review Service by Okami',
+    name: 'The Okami Review',
     duration: '45–60 min',
     format: 'Google Meet',
     description:
@@ -45,7 +47,7 @@ const SUMMARY_SERVICE: Record<'review' | 'discovery', SummaryService> = {
     duration: '15 min',
     format: 'Google Meet',
     description:
-      "A 15-minute conversation to talk through what's slowing you down and whether the Okami Review is the right fit.",
+      "A 15-minute conversation to talk through what's slowing you down and whether the review is the right fit.",
     priceCents: null,
   },
 };
@@ -243,6 +245,16 @@ export default function BookFlow({
     saveSnapshot(state);
   }, [state, hydrated]);
 
+  // Lock body scroll when payment overlay is shown
+  useEffect(() => {
+    if (state.step === 'payment') {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [state.step]);
+
   const handleServiceChange = useCallback((id: 'review' | 'discovery') => {
     dispatch({ type: 'SET_SERVICE', id });
   }, []);
@@ -261,6 +273,24 @@ export default function BookFlow({
   const handleIntakeSubmit = useCallback(
     async (values: IntakeValues) => {
       dispatch({ type: 'SET_INTAKE', values });
+
+      if (values.email) {
+        trackPartialBooking({
+          email: values.email.trim(),
+          serviceId: state.serviceId,
+          slotIso: state.slotIso,
+          step: state.serviceId === 'review' ? 'payment' : 'intake',
+          intake: {
+            name: values.name,
+            company: values.company,
+            role: values.role,
+            challenge: values.challenge,
+            companySize: values.companySize,
+            revenueStage: values.revenueStage,
+            howHeard: values.howHeard,
+          },
+        });
+      }
 
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -288,6 +318,14 @@ export default function BookFlow({
             });
             return;
           }
+          trackPartialBooking({
+            email: values.email.trim(),
+            serviceId: 'discovery',
+            slotIso: state.slotIso,
+            step: 'intake',
+            intake: {},
+            converted: true,
+          });
           try {
             window.sessionStorage.removeItem(STORAGE_KEY);
           } catch {
@@ -375,102 +413,117 @@ export default function BookFlow({
   // Currently-active step id for indicator
   const currentStepId = state.step;
 
-  const showSummary = state.step === 'payment';
-
   return (
-    <div className={showSummary ? 'grid lg:grid-cols-[1fr_360px] gap-10 lg:gap-16' : ''}>
-      {/* Left: flow column */}
-      <div className="min-w-0">
-        <StepIndicator
-          steps={stepsForService}
-          currentStepId={currentStepId}
-          completedStepIds={completedStepIds}
-          onStepClick={handleStepClick}
-        />
+    <>
+      {/* Payment overlay — full viewport checkout experience */}
+      {state.step === 'payment' && (
+        <div className="fixed inset-0 z-50 bg-dark overflow-y-auto">
+          <BookTopBar />
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24">
+            <div className="grid lg:grid-cols-[1fr_360px] gap-10 lg:gap-16">
+              <div className="min-w-0">
+                <StepIndicator
+                  steps={stepsForService}
+                  currentStepId={currentStepId}
+                  completedStepIds={completedStepIds}
+                  onStepClick={handleStepClick}
+                />
 
-        {/* Intake-submit error banner (shown on intake step) */}
-        {state.step === 'intake' && state.paymentInitError && (
-          <div
-            role="alert"
-            className="border-l-2 border-burgundy pl-4 py-3 bg-burgundy/[0.04] mb-10"
-          >
-            <p className="font-body text-sm text-off-white leading-relaxed">
-              {state.paymentInitError}
-            </p>
-          </div>
-        )}
+                {state.clientSecret && state.paymentIntentId && state.slotIso ? (
+                  <PaymentStep
+                    publishableKey={stripePublishableKey}
+                    clientSecret={state.clientSecret}
+                    paymentIntentId={state.paymentIntentId}
+                    priceLabel="$299"
+                    bookingPayload={{
+                      serviceId: 'review',
+                      slotIso: state.slotIso,
+                      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                      intake: state.intake,
+                    }}
+                    onBack={handlePaymentBack}
+                  />
+                ) : (
+                  <div className="border border-burgundy/30 bg-burgundy/[0.04] p-8 max-w-xl">
+                    <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-burgundy block mb-4">
+                      Session Expired
+                    </span>
+                    <h2 className="font-playfair text-2xl text-off-white mb-3 leading-tight">
+                      Let&apos;s rebuild your payment session.
+                    </h2>
+                    <p className="font-body text-sm text-ash mb-6 leading-relaxed">
+                      Your details are still here. Step back to intake and press Continue to restart payment — no charges have been made.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handlePaymentBack}
+                      className="font-mono text-xs tracking-[0.22em] uppercase text-off-white hover:text-burgundy underline underline-offset-4 transition-colors"
+                    >
+                      ← Back to intake
+                    </button>
+                  </div>
+                )}
+              </div>
 
-        {state.step === 'booking' && (
-          <BookingStep
-            services={SERVICES}
-            serviceId={state.serviceId}
-            onServiceChange={handleServiceChange}
-            selectedSlot={state.slotIso}
-            onSlotSelect={handleSlotSelect}
-          />
-        )}
-
-        {state.step === 'intake' && (
-          <IntakeStep
-            serviceId={state.serviceId}
-            initialValues={state.intake}
-            onSubmit={handleIntakeSubmit}
-            onBack={handleIntakeBack}
-            submitCtaLabel={
-              state.serviceId === 'review' ? 'Continue to payment' : 'Confirm booking'
-            }
-            submitting={state.submittingIntake || state.initializingPayment}
-          />
-        )}
-
-        {state.step === 'payment' &&
-          (state.clientSecret && state.paymentIntentId && state.slotIso ? (
-            <PaymentStep
-              publishableKey={stripePublishableKey}
-              clientSecret={state.clientSecret}
-              paymentIntentId={state.paymentIntentId}
-              priceLabel="$299"
-              bookingPayload={{
-                serviceId: 'review',
-                slotIso: state.slotIso,
-                timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                intake: state.intake,
-              }}
-              onBack={handlePaymentBack}
-            />
-          ) : (
-            <div className="border border-burgundy/30 bg-burgundy/[0.04] p-8 max-w-xl">
-              <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-burgundy block mb-4">
-                Session Expired
-              </span>
-              <h2 className="font-playfair text-2xl text-off-white mb-3 leading-tight">
-                Let&apos;s rebuild your payment session.
-              </h2>
-              <p className="font-body text-sm text-ash mb-6 leading-relaxed">
-                Your details are still here. Step back to intake and press Continue to restart payment — no charges have been made.
-              </p>
-              <button
-                type="button"
-                onClick={handlePaymentBack}
-                className="font-mono text-xs tracking-[0.22em] uppercase text-off-white hover:text-burgundy underline underline-offset-4 transition-colors"
-              >
-                ← Back to intake
-              </button>
+              <OrderSummary
+                service={summaryService}
+                slot={slotSummary}
+                intakeName={state.intake.name || undefined}
+                intakeEmail={state.intake.email || undefined}
+                showTotal={state.serviceId === 'review'}
+                mobileExpandedDefault
+              />
             </div>
-          ))}
-      </div>
-
-      {/* Right: order summary — only on payment step */}
-      {showSummary && (
-        <OrderSummary
-          service={summaryService}
-          slot={slotSummary}
-          intakeName={state.intake.name || undefined}
-          intakeEmail={state.intake.email || undefined}
-          showTotal={state.serviceId === 'review'}
-          mobileExpandedDefault
-        />
+          </div>
+        </div>
       )}
-    </div>
+
+      {/* Normal page flow — booking & intake steps */}
+      {state.step !== 'payment' && (
+        <>
+          <StepIndicator
+            steps={stepsForService}
+            currentStepId={currentStepId}
+            completedStepIds={completedStepIds}
+            onStepClick={handleStepClick}
+          />
+
+          {state.step === 'intake' && state.paymentInitError && (
+            <div
+              role="alert"
+              className="border-l-2 border-burgundy pl-4 py-3 bg-burgundy/[0.04] mb-10"
+            >
+              <p className="font-body text-sm text-off-white leading-relaxed">
+                {state.paymentInitError}
+              </p>
+            </div>
+          )}
+
+          {state.step === 'booking' && (
+            <BookingStep
+              services={SERVICES}
+              serviceId={state.serviceId}
+              onServiceChange={handleServiceChange}
+              selectedSlot={state.slotIso}
+              onSlotSelect={handleSlotSelect}
+            />
+          )}
+
+          {state.step === 'intake' && (
+            <IntakeStep
+              serviceId={state.serviceId}
+              slotIso={state.slotIso}
+              initialValues={state.intake}
+              onSubmit={handleIntakeSubmit}
+              onBack={handleIntakeBack}
+              submitCtaLabel={
+                state.serviceId === 'review' ? 'Continue to payment' : 'Confirm booking'
+              }
+              submitting={state.submittingIntake || state.initializingPayment}
+            />
+          )}
+        </>
+      )}
+    </>
   );
 }

@@ -47,8 +47,7 @@ export default function Navigation() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
-  // Hide nav entirely on /book routes (checkout has its own minimal bar)
-  if (pathname.startsWith('/book')) return null;
+  if (pathname.startsWith('/book/confirmed') || pathname.startsWith('/book/cancelled')) return null;
 
   // Focus trap: keep Tab within the mobile menu
   const handleMenuKeyDown = (e: React.KeyboardEvent) => {

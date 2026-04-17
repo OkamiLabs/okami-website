@@ -91,7 +91,7 @@ export default function Home() {
                 Every engagement starts here.
               </h2>
               <p className="font-body text-base md:text-lg text-ash leading-relaxed mb-8">
-                <span className="font-playfair">The Okami Review</span> is a 45-minute structured conversation followed by a
+                <span className="font-playfair italic text-off-white">The Okami Review</span> is a 45-minute structured conversation followed by a
                 full report. It shows how your business actually runs and where it breaks. That
                 report becomes the foundation for everything that follows.
               </p>
@@ -200,7 +200,7 @@ export default function Home() {
               </h2>
               <p className="font-body text-base leading-relaxed text-ash">
                 Get The Operator&apos;s Blueprint — the same scorecard framework Okami uses in every
-                <span className="font-playfair"> Okami Review</span>. See where your business actually stands before adding
+                 review. See where your business actually stands before adding
                 tools or technology.
               </p>
             </div>
@@ -217,8 +217,8 @@ export default function Home() {
       {/* Final CTA */}
       <CTASection
         headline="Start with a conversation."
-        subheadline="Fifteen minutes to talk through what's slowing you down. No pitch — just a read on whether the Okami Review is the right fit."
-        buttonText="Book Your Consultation"
+        subheadline="Fifteen minutes to talk through what's slowing you down. No pitch — just a read on whether the review is the right fit."
+        buttonText="Book your Review"
         buttonHref="/book"
       />
     </main>
