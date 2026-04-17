@@ -1,10 +1,17 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { bootstrapCal, openCalModal } from '@/lib/cal';
 
 interface TimePickerProps {
-  calLink: string; // e.g. "okami/okami-review"
+  /**
+   * Cal.com calLink in "username/event-slug" format (e.g. "okami/okami-review").
+   * Used for availability lookup via /api/availability.
+   */
+  calLink: string;
+  /** Called when a slot is picked. Advances the /book flow to the intake step. */
+  onSlotSelect: (iso: string) => void;
+  /** Highlights the matching slot with a selected (burgundy) state. */
+  selectedSlot?: string | null;
 }
 
 /* ── Date helpers (no external deps) ───────────────────────────── */
@@ -75,7 +82,7 @@ function formatSelectedDayLabel(ymd: string): string {
 
 /* ── Component ──────────────────────────────────────────────────── */
 
-export default function TimePicker({ calLink }: TimePickerProps) {
+export default function TimePicker({ calLink, onSlotSelect, selectedSlot }: TimePickerProps) {
   const [weekOffset, setWeekOffset] = useState(getInitialWeekOffset);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [slots, setSlots] = useState<Record<string, string[]>>({});
@@ -88,11 +95,6 @@ export default function TimePicker({ calLink }: TimePickerProps) {
     d.setDate(monday.getDate() + i);
     return d;
   });
-
-  // Bootstrap Cal popup on mount
-  useEffect(() => {
-    bootstrapCal();
-  }, []);
 
   const fetchSlots = useCallback(async () => {
     setLoading(true);
@@ -152,7 +154,7 @@ export default function TimePicker({ calLink }: TimePickerProps) {
   }, [fetchSlots]);
 
   function handleSlotClick(isoTime: string) {
-    openCalModal(calLink, isoTime);
+    onSlotSelect(isoTime);
   }
 
   const activeSlots = selectedDay ? (slots[selectedDay] ?? []) : [];
@@ -272,21 +274,26 @@ export default function TimePicker({ calLink }: TimePickerProps) {
 
             {/* Time grid: 2 cols mobile, 4 cols desktop */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {activeSlots.map((slot) => (
-                <button
-                  key={slot}
-                  onClick={() => handleSlotClick(slot)}
-                  className="font-mono text-xs py-2.5 px-3 border border-ash/20 text-ash
-                             hover:border-burgundy hover:text-off-white hover:bg-burgundy/10
-                             transition-colors text-center"
-                >
-                  {formatTime(slot)}
-                </button>
-              ))}
+              {activeSlots.map((slot) => {
+                const isSelected = selectedSlot === slot;
+                return (
+                  <button
+                    key={slot}
+                    onClick={() => handleSlotClick(slot)}
+                    className={`font-mono text-xs py-2.5 px-3 border transition-colors text-center ${
+                      isSelected
+                        ? 'border-burgundy bg-burgundy/10 text-off-white'
+                        : 'border-ash/20 text-ash hover:border-burgundy hover:text-off-white hover:bg-burgundy/10'
+                    }`}
+                  >
+                    {formatTime(slot)}
+                  </button>
+                );
+              })}
             </div>
 
             <p className="font-mono text-[10px] text-ash/35 mt-4">
-              Times in your local timezone. Clicking opens the booking form.
+              Times shown in your local timezone.
             </p>
           </div>
         )}

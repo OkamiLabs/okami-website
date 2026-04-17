@@ -1,38 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isRateLimited, getClientIp } from '@/lib/rate-limit';
 
 /**
  * Newsletter subscription via Beehiiv — "The Silent Brief"
  *
- * Required env vars for Beehiiv:
+ * Required env vars:
  *   BEEHIIV_API_KEY        — API key from Beehiiv dashboard (Settings → Integrations)
  *   BEEHIIV_PUBLICATION_ID — Publication ID (visible in Beehiiv dashboard URL or API settings)
- *
- * If Beehiiv env vars are not set, falls back to collecting emails
- * in /tmp/newsletter-subscribers.json (works on Vercel for dev/preview).
  */
 
 const BEEHIIV_API_KEY = process.env.BEEHIIV_API_KEY || '';
 const BEEHIIV_PUBLICATION_ID = process.env.BEEHIIV_PUBLICATION_ID || '';
 
-/* ── Rate limiting (in-memory, per serverless instance) ────────────── */
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
-const RATE_LIMIT_MAX_REQUESTS = 5; // max 5 per IP per minute
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return false;
-  }
-
-  entry.count++;
-  return entry.count > RATE_LIMIT_MAX_REQUESTS;
-}
-
-/* ── Email validation ──────────────────────────────────────────────── */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 function isValidEmail(email: unknown): email is string {
@@ -70,33 +49,10 @@ async function subscribeViaBeehiiv(email: string): Promise<{ ok: boolean; messag
   return { ok: false, message: 'Subscription failed. Please try again later.' };
 }
 
-async function subscribeViaFallback(email: string): Promise<{ ok: boolean; message: string }> {
-  const fs = await import('fs/promises');
-  const path = '/tmp/newsletter-subscribers.json';
-
-  let subscribers: string[] = [];
-  try {
-    const existing = await fs.readFile(path, 'utf-8');
-    subscribers = JSON.parse(existing);
-  } catch {
-    // File doesn't exist yet
-  }
-
-  if (subscribers.includes(email)) {
-    return { ok: true, message: "You're already subscribed." };
-  }
-
-  subscribers.push(email);
-  await fs.writeFile(path, JSON.stringify(subscribers, null, 2));
-
-  return { ok: true, message: 'Check your inbox for The Operator\'s Blueprint.' };
-}
-
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting by IP
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    if (isRateLimited(ip)) {
+    const ip = getClientIp(request.headers);
+    if (isRateLimited(ip, { max: 5, windowMs: 60 * 1000 })) {
       return NextResponse.json(
         { message: 'Too many requests. Please try again in a minute.' },
         { status: 429 }
@@ -113,10 +69,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const useBeehiiv = BEEHIIV_API_KEY && BEEHIIV_PUBLICATION_ID;
-    const result = useBeehiiv
-      ? await subscribeViaBeehiiv(email)
-      : await subscribeViaFallback(email);
+    if (!BEEHIIV_API_KEY || !BEEHIIV_PUBLICATION_ID) {
+      console.warn('[newsletter] Beehiiv not configured — subscriber email discarded:', email);
+      return NextResponse.json(
+        { message: 'Newsletter is not available right now. Please try again later.' },
+        { status: 503 }
+      );
+    }
+
+    const result = await subscribeViaBeehiiv(email);
 
     if (result.ok) {
       return NextResponse.json({ message: result.message }, { status: 200 });
@@ -127,7 +88,7 @@ export async function POST(request: NextRequest) {
     console.error('Newsletter subscription error:', error);
     return NextResponse.json(
       { message: 'Something went wrong. Please try again.' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

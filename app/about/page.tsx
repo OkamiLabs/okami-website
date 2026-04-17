@@ -97,8 +97,8 @@ export default function AboutPage() {
         headline="Start with The Okami Review."
         subheadline="A 45-minute conversation that produces a full picture of how your business runs, where it breaks, and what to fix first."
         buttonText="Request Your Okami Review"
-        buttonHref="/contact"
-        buttonVariant="secondary"
+        buttonHref="/book"
+        buttonVariant="consulting"
       />
     </main>
   );

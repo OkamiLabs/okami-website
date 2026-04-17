@@ -5,7 +5,7 @@ interface CTASectionProps {
   subheadline?: string;
   buttonText?: string;
   buttonHref?: string;
-  buttonVariant?: 'primary' | 'secondary' | 'ghost';
+  buttonVariant?: 'primary' | 'consulting' | 'labs' | 'ghost';
   className?: string;
 }
 
@@ -13,7 +13,7 @@ export default function CTASection({
   headline,
   subheadline,
   buttonText = 'Book a Consultation',
-  buttonHref = '/contact',
+  buttonHref = '/book',
   buttonVariant = 'primary',
   className = '',
 }: CTASectionProps) {
@@ -30,7 +30,7 @@ export default function CTASection({
             {subheadline}
           </p>
         )}
-        <Button href={buttonHref} variant={buttonVariant}>
+        <Button href={buttonHref} variant={buttonVariant} size="lg">
           {buttonText}
         </Button>
       </div>

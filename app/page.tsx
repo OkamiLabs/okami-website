@@ -219,7 +219,7 @@ export default function Home() {
         headline="Start with a conversation."
         subheadline="Fifteen minutes to talk through what's slowing you down. No pitch — just a read on whether the Okami Review is the right fit."
         buttonText="Book Your Consultation"
-        buttonHref="/contact"
+        buttonHref="/book"
       />
     </main>
   );

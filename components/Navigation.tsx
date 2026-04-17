@@ -10,7 +10,7 @@ const navLinks = [
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/building', label: "What We're Building" },
-  { href: '/contact', label: 'Contact' },
+  { href: '/book', label: 'Book' },
 ];
 
 export default function Navigation() {
@@ -39,15 +39,16 @@ export default function Navigation() {
   // Focus trap + auto-focus close button when menu opens
   useEffect(() => {
     if (mobileMenuOpen) {
-      // Prevent body scroll
       document.body.style.overflow = 'hidden';
-      // Focus the close button
       setTimeout(() => closeButtonRef.current?.focus(), 100);
     } else {
       document.body.style.overflow = '';
     }
     return () => { document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
+
+  // Hide nav entirely on /book routes (checkout has its own minimal bar)
+  if (pathname.startsWith('/book')) return null;
 
   // Focus trap: keep Tab within the mobile menu
   const handleMenuKeyDown = (e: React.KeyboardEvent) => {

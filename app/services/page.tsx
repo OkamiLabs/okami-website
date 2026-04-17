@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { CTASection } from '@/components';
+import { CTASection, Button } from '@/components';
 
 export const metadata: Metadata = {
   title: 'Consulting',
@@ -70,12 +70,9 @@ export default function ServicesPage() {
                 </p>
               </div>
 
-              <a
-                href="/contact"
-                className="inline-block px-8 py-4 bg-burgundy text-off-white font-mono text-sm uppercase tracking-wider hover:bg-burgundy/90 transition-colors"
-              >
+              <Button href="/book" variant="consulting" size="lg">
                 Request Your Okami Review
-              </a>
+              </Button>
             </div>
 
             <div className="lg:col-span-5">
@@ -227,8 +224,8 @@ export default function ServicesPage() {
         headline="Start with the Okami Review."
         subheadline="Fifteen minutes to talk through your workflows and see if the Okami Review is the right fit. No pitch."
         buttonText="Book Your Consultation"
-        buttonHref="/contact"
-        buttonVariant="secondary"
+        buttonHref="/book"
+        buttonVariant="consulting"
       />
     </main>
   );

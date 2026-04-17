@@ -267,7 +267,7 @@ export default function BuildingPage() {
         headline="Ready to put a system to work?"
         subheadline="Every Labs engagement starts with the Okami Review — so what gets built fits the business that's actually there."
         buttonText="Book a Consultation"
-        buttonHref="/contact"
+        buttonHref="/book"
       />
     </main>
   );

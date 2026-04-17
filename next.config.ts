@@ -3,6 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 
+  async redirects() {
+    return [
+      // Old /contact surface is gone — all booking lives at /book now.
+      { source: '/contact', destination: '/book', permanent: true },
+    ];
+  },
+
   async headers() {
     return [
       {
@@ -18,12 +25,12 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://app.cal.com",
-              "style-src 'self' 'unsafe-inline' https://app.cal.com",
+              "script-src 'self' 'unsafe-inline' https://js.stripe.com https://va.vercel-scripts.com",
+              "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' https://fonts.gstatic.com",
-              "frame-src https://app.cal.com https://cal.com",
-              "connect-src 'self' https://app.cal.com https://api.beehiiv.com",
+              "frame-src https://js.stripe.com https://hooks.stripe.com",
+              "connect-src 'self' https://api.stripe.com https://api.beehiiv.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

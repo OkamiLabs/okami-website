@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Link from 'next/link';
+import Button from './Button';
 
 export default function HeroSection() {
   const ref = useRef<HTMLElement>(null);
@@ -50,17 +50,9 @@ export default function HeroSection() {
 
         {/* CTA */}
         <div className="hero-cta mt-[52px]">
-          <Link
-            href="/contact"
-            className="group relative inline-flex items-center gap-3 px-[22px] py-3 font-mono text-sm tracking-[0.18em] uppercase text-off-white"
-          >
-            <span className="absolute top-0 left-0 w-[10px] h-[10px] border-t border-l border-off-white/50 transition-all duration-300 group-hover:w-4 group-hover:h-4 group-hover:border-off-white/90" />
-            <span className="absolute bottom-0 right-0 w-[10px] h-[10px] border-b border-r border-off-white/50 transition-all duration-300 group-hover:w-4 group-hover:h-4 group-hover:border-off-white/90" />
+          <Button href="/book" variant="primary">
             Book a Consultation
-            <span className="text-ash transition-transform duration-300 group-hover:translate-x-1 group-hover:text-off-white">
-              →
-            </span>
-          </Link>
+          </Button>
         </div>
       </div>
     </section>
