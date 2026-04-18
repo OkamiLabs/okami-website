@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import type { Message } from 'ai/react';
+import type { UIMessage as Message } from '@ai-sdk/react';
 import type { WidgetConfig } from './types/widget';
 
 interface MessageListProps {

@@ -66,6 +66,10 @@ If a user returns from a 3DS bank redirect before `/api/book` fires, `/book/conf
 
 Booking references are `OR-XXXXX` (Okami Review) or `DC-XXXXX` (Discovery Call).
 
+## Widget
+
+The Okami chatbot widget is hosted at `/widget.js`. Source lives in `widget/`; `npm run build:widget` compiles it to `public/widget.js` (the full `npm run build` runs this first). The widget calls `/api/chat`, `/api/conversations/:id/messages`, and `/api/widget-errors`. Phase I: the chatbot itself is stubbed — set `CHATBOT_ENABLED=0` (default). Admin dashboard at `/admin/conversations` (basic auth).
+
 ## Deployment
 
 Auto-deploys to Vercel from `main`. See `CLAUDE.md` for detailed architecture notes and conventions.

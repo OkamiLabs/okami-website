@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run build:widget && next build",
+    "build:widget": "vite build --config widget/vite.config.ts",
     "start": "next start",
     "lint": "next lint",
     "migrate": "node-pg-migrate -m db/migrations up",
@@ -27,15 +28,18 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@ai-sdk/react": "^3.0.170",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
+    "@vitejs/plugin-react": "^5.2.0",
     "autoprefixer": "^10.4.27",
     "node-pg-migrate": "^8.0.0",
     "pg": "^8.13.0",
     "postcss": "^8.5.8",
     "svgo": "^4.0.1",
     "tailwindcss": "^4.2.2",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vite": "^7.3.2"
   }
 }

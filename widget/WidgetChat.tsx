@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useChat } from 'ai/react';
+import { useChat } from '@ai-sdk/react';
 import type { WidgetConfig } from './types/widget';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
