@@ -20,6 +20,11 @@
  *
  * Phase II will add: streaming via `streamText().toUIMessageStreamResponse`,
  * tool guards, prompt sanitization, rate limits, spend-cap reservations.
+ *
+ * Phase II invariant: `@ai-sdk/*` MUST be imported lazily inside the
+ * `CHATBOT_ENABLED === '1'` branch via `await import(...)` — never at the
+ * top of this file. A top-level import pulls the SDK into the serverless
+ * bundle unconditionally and breaks the "code absence = off" guarantee.
  */
 
 import { type NextRequest, NextResponse } from 'next/server';

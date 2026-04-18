@@ -23,6 +23,7 @@ import { sql } from '@/lib/db/client';
 
 const COOKIE_NAME = 'visitor_id';
 const ONE_YEAR_SEC = 365 * 24 * 60 * 60;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function buildVisitorCookie(value: string): string {
   const isProduction = process.env.VERCEL_ENV === 'production';
@@ -50,7 +51,10 @@ export interface VisitorContext {
  */
 export async function getOrCreateVisitor(): Promise<VisitorContext> {
   const store = await cookies();
-  const cookieId = store.get(COOKIE_NAME)?.value;
+  const rawCookie = store.get(COOKIE_NAME)?.value;
+  // Reject malformed cookie values without a DB round-trip. Prevents cheap
+  // probing of the visitors table with adversarial cookie payloads.
+  const cookieId = rawCookie && UUID_RE.test(rawCookie) ? rawCookie : undefined;
 
   if (cookieId) {
     const existing = (await sql`
@@ -113,11 +117,11 @@ export async function getOrCreateVisitor(): Promise<VisitorContext> {
  */
 export async function getVerifiedVisitorId(): Promise<string | null> {
   const store = await cookies();
-  const cookieId = store.get(COOKIE_NAME)?.value;
-  if (!cookieId) return null;
+  const rawCookie = store.get(COOKIE_NAME)?.value;
+  if (!rawCookie || !UUID_RE.test(rawCookie)) return null;
 
   const rows = (await sql`
-    SELECT id FROM visitors WHERE id = ${cookieId}
+    SELECT id FROM visitors WHERE id = ${rawCookie}
   `) as Array<{ id: string }>;
 
   return rows[0]?.id ?? null;
