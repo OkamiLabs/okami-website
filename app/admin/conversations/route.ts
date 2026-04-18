@@ -40,6 +40,13 @@ interface MessageRow {
   created_at: string;
 }
 
+// TODO(csp): next.config.ts headers() wins over route-handler CSP + X-Frame-Options
+// for /admin/conversations in Next 16 — verified via curl -I. X-Robots-Tag and
+// Cache-Control from this handler DO win (next.config.ts doesn't set those).
+// Fix options: (a) carve /admin/* out of next.config.ts headers() with a more
+// specific matcher, or (b) set admin headers from proxy.ts on the response.
+// Low priority — admin is basic-auth'd + noindex'd; frame-ancestors 'self' from
+// the site-wide CSP is still safe here.
 const SECURITY_HEADERS: Record<string, string> = {
   'Content-Security-Policy': "default-src 'self'; frame-ancestors 'none'",
   'X-Robots-Tag': 'noindex, nofollow',
@@ -171,11 +178,8 @@ function renderPage(
 </html>`;
 }
 
-// TODO(Phase 3): wire real basic-auth in proxy.ts (HMAC-hashed password,
-// constant-time compare). Until Phase 3 lands, the admin dashboard is a
-// safe-default 401 — no data leaves the server. Renderers + query helpers
-// below stay unused by design; Phase 3 flips the handler to call
-// `renderDashboard(request)` after the proxy-level auth succeeds.
+// Auth is enforced upstream in proxy.ts (HMAC-hashed basic auth, constant-time
+// compare). Requests that reach this handler are already authenticated.
 async function renderDashboard(request: Request): Promise<NextResponse> {
   const url = new URL(request.url);
   const page = Math.max(1, parseInt(url.searchParams.get('page') ?? '1', 10) || 1);
@@ -228,18 +232,7 @@ async function renderDashboard(request: Request): Promise<NextResponse> {
   });
 }
 
-// Keep Phase-3 render path tree-shakably referenced so lint/tsc don't
-// drop it before the auth wiring lands.
-void renderDashboard;
-
-export async function GET(_request: Request) {
-  return new NextResponse('Authentication required', {
-    status: 401,
-    headers: {
-      ...SECURITY_HEADERS,
-      'WWW-Authenticate': 'Basic realm="admin", charset="UTF-8"',
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-  });
+export async function GET(request: Request) {
+  return renderDashboard(request);
 }
 
