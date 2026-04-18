@@ -8,42 +8,22 @@
  * Phase I: logs via `console.error` only (Sentry forwarding lands in
  * Phase 9). 8KB body gate (relaxed from the source's 4KB, per plan).
  * Rate limiting lands in Phase 8 — no per-IP limiter here yet.
+ * Phase 6: Zod validation on body.
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
 
 const MAX_BODY_BYTES = 8192;
 
-interface ErrorReport {
-  message: string;
-  stack?: string;
-  widgetVersion?: string;
-  url?: string;
-}
-
-function validate(raw: unknown): { ok: true; data: ErrorReport } | { ok: false } {
-  if (!raw || typeof raw !== 'object') return { ok: false };
-  const b = raw as Record<string, unknown>;
-  if (typeof b.message !== 'string' || b.message.length === 0 || b.message.length > 1000) {
-    return { ok: false };
-  }
-  const out: ErrorReport = { message: b.message };
-  if (b.stack !== undefined) {
-    if (typeof b.stack !== 'string' || b.stack.length > 3000) return { ok: false };
-    out.stack = b.stack;
-  }
-  if (b.widgetVersion !== undefined) {
-    if (typeof b.widgetVersion !== 'string' || b.widgetVersion.length > 20) return { ok: false };
-    out.widgetVersion = b.widgetVersion;
-  }
-  if (b.url !== undefined) {
-    if (typeof b.url !== 'string' || b.url.length > 500) return { ok: false };
-    out.url = b.url;
-  }
-  return { ok: true, data: out };
-}
+const errorBodySchema = z.object({
+  message: z.string().max(1000),
+  stack: z.string().max(3000).optional(),
+  widgetVersion: z.string().max(20).optional(),
+  url: z.string().url().max(500).optional(),
+});
 
 export async function POST(request: NextRequest) {
   const contentLength = request.headers.get('content-length');
@@ -64,20 +44,18 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const parsed = validate(raw);
-  if (!parsed.ok) {
+  const parsed = errorBodySchema.safeParse(raw);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: 'validation', message: 'Invalid error report.' },
+      {
+        error: 'validation',
+        message: parsed.error.issues[0]?.message ?? 'Invalid error report.',
+      },
       { status: 400 }
     );
   }
 
-  console.error('[widget-error]', {
-    message: parsed.data.message,
-    widgetVersion: parsed.data.widgetVersion,
-    url: parsed.data.url,
-    stack: parsed.data.stack?.slice(0, 500),
-  });
+  console.error('[widget-error]', parsed.data);
 
   return new NextResponse(null, { status: 204 });
 }
