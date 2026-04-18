@@ -11,16 +11,17 @@
  *   1. Body size gate (content-length > 256KB → 413)
  *   2. Safe JSON parse (→ 400)
  *   3. Zod validation on body (Phase 6)
- *   4. getOrCreateVisitor() — may mint a new visitor + conversation
- *   5. If `body.conversationId` is supplied, require it to belong to this
- *      visitor — else 404. No silent fall-through to the visitor's latest
- *      conversation (Phase 7 fix, enforced here from day one).
- *   6. Persist page_context on first chat per conversation (Phase 6)
- *   7. INSERT user row, INSERT canned assistant row
- *   8. Respond 200 JSON with `x-conversation-id` header + any Set-Cookie
+ *   4. getOrCreateVisitor() — HMAC-verified, may mint a new visitor
+ *   5. Visitor + IP rate-limit + spend-cap gate (Phase 8 — cheap rejects)
+ *   6. If `body.conversationId` is supplied, require ownership → else 404
+ *   7. Persist page_context on first chat per conversation
+ *   8. reserveTokens(0) — Phase I stub; exercises the reservation path
+ *   9. INSERT user row, INSERT canned assistant row
+ *  10. reconcileTokens(reservationId, 0)
+ *  11. Respond 200 JSON with `x-conversation-id` header + any Set-Cookie
  *
  * Phase II will add: streaming via `streamText().toUIMessageStreamResponse`,
- * tool guards, prompt sanitization, rate limits, spend-cap reservations.
+ * tool guards, prompt sanitization, real token reservations/reconciliation.
  *
  * Phase II invariant: `@ai-sdk/*` MUST be imported lazily inside the
  * `CHATBOT_ENABLED === '1'` branch via `await import(...)` — never at the
@@ -30,9 +31,12 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'node:crypto';
+import { ipAddress } from '@vercel/functions';
 import { z } from 'zod';
 import { sql } from '@/lib/db/client';
 import { getOrCreateVisitor } from '@/lib/visitor';
+import { checkChatRateLimit, opportunisticCleanup } from '@/lib/rate-limit-chat';
+import { checkSpendCap, reconcileTokens, reserveTokens } from '@/lib/spend-cap';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -55,6 +59,9 @@ const chatBodySchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Fire-and-forget cleanup of expired buckets + stale reservations (~10%).
+  void opportunisticCleanup();
+
   // 1. Body size gate
   const contentLength = request.headers.get('content-length');
   if (contentLength && parseInt(contentLength, 10) > MAX_BODY_BYTES) {
@@ -96,10 +103,49 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 4. Visitor + conversation
+  // 4. Visitor + conversation (HMAC-verified cookie).
   const { visitorId, conversationId, setCookieHeaders } = await getOrCreateVisitor();
 
-  // 5. Conversation ownership check — no silent fall-through.
+  // 5. Rate limits (visitor + IP) + spend cap. Cheap rejects before DB work.
+  const ip = ipAddress(request) ?? 'unknown';
+
+  const visitorLimit = await checkChatRateLimit('visitor', visitorId, {
+    max: 20,
+    windowSec: 600,
+  });
+  if (!visitorLimit.allowed) {
+    return NextResponse.json(
+      { error: 'rate_limit', message: 'Too many chats. Try again soon.' },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(visitorLimit.retryAfter ?? 60) },
+      }
+    );
+  }
+
+  const ipLimit = await checkChatRateLimit('ip', ip, { max: 60, windowSec: 600 });
+  if (!ipLimit.allowed) {
+    return NextResponse.json(
+      { error: 'rate_limit', message: 'Too many chats from this network.' },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(ipLimit.retryAfter ?? 60) },
+      }
+    );
+  }
+
+  const cap = await checkSpendCap();
+  if (!cap.allowed) {
+    return NextResponse.json(
+      {
+        error: 'capacity',
+        message: 'The assistant is at capacity for today. Please try again tomorrow.',
+      },
+      { status: 429 }
+    );
+  }
+
+  // 6. Conversation ownership check — no silent fall-through.
   let activeConversationId = conversationId;
   if (parsed.data.conversationId) {
     const owned = (await sql`
@@ -116,9 +162,7 @@ export async function POST(request: NextRequest) {
     activeConversationId = owned[0]!.id;
   }
 
-  // 6. Persist page_context on first chat per conversation.
-  // Only writes when page_context IS NULL, preserving the landing context
-  // rather than tracking every page the visitor navigates to.
+  // 7. Persist page_context on first chat per conversation.
   const pageContext = {
     url: parsed.data.url ?? null,
     title: parsed.data.title ?? null,
@@ -130,7 +174,10 @@ export async function POST(request: NextRequest) {
      WHERE id = ${activeConversationId} AND page_context IS NULL
   `;
 
-  // 7. Persist user + canned assistant message.
+  // 8. Reserve tokens (Phase I: 0 — exercises the reservation code path).
+  const reservationId = await reserveTokens(activeConversationId, 0);
+
+  // 9. Persist user + canned assistant message.
   const userId = randomUUID();
   const assistantId = randomUUID();
 
@@ -146,7 +193,10 @@ export async function POST(request: NextRequest) {
     UPDATE conversations SET updated_at = NOW() WHERE id = ${activeConversationId}
   `;
 
-  // 8. Respond.
+  // 10. Reconcile reservation (Phase I: 0 actual tokens consumed).
+  await reconcileTokens(reservationId, 0);
+
+  // 11. Respond.
   const response = NextResponse.json(
     { role: 'assistant', content: CANNED_REPLY },
     { status: 200 }

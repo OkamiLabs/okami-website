@@ -7,12 +7,16 @@
  *
  * Phase I: logs via `console.error` only (Sentry forwarding lands in
  * Phase 9). 8KB body gate (relaxed from the source's 4KB, per plan).
- * Rate limiting lands in Phase 8 — no per-IP limiter here yet.
  * Phase 6: Zod validation on body.
+ * Phase 7: resolves visitor via HMAC-verified cookie (read-only) for logging.
+ * Phase 8: Neon-backed per-visitor/IP rate limit (30 / 10 min).
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { ipAddress } from '@vercel/functions';
 import { z } from 'zod';
+import { getVerifiedVisitorId } from '@/lib/visitor';
+import { checkChatRateLimit } from '@/lib/rate-limit-chat';
 
 export const runtime = 'nodejs';
 
@@ -55,7 +59,20 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  console.error('[widget-error]', parsed.data);
+  // Phase 7/8: resolve visitor (read-only) + IP, then rate-limit before logging.
+  const visitorId = await getVerifiedVisitorId();
+  const ip = ipAddress(request) ?? 'unknown';
+  const rateLimitKey = visitorId ?? ip;
+
+  const limit = await checkChatRateLimit('ip', rateLimitKey, { max: 30, windowSec: 600 });
+  if (!limit.allowed) {
+    return new NextResponse(null, {
+      status: 429,
+      headers: { 'Retry-After': String(limit.retryAfter ?? 60) },
+    });
+  }
+
+  console.error('[widget-error]', { visitorId, ip, ...parsed.data });
 
   return new NextResponse(null, { status: 204 });
 }
