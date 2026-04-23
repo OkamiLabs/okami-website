@@ -44,7 +44,7 @@ export default function BookingStep({
             <button
               key={service.id}
               onClick={() => onServiceChange(service.id)}
-              className={`relative pb-4 mr-10 font-mono text-xs tracking-widest uppercase transition-colors ${
+              className={`relative pb-4 mr-10 text-xs tracking-widest uppercase transition-colors ${
                 isActive ? 'text-off-white' : 'text-ash hover:text-off-white/70'
               }`}
             >

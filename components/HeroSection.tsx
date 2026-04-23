@@ -48,10 +48,16 @@ export default function HeroSection() {
           Behind Modern Business
         </h1>
 
+        {/* Subheading */}
+        <p className="hero-subhead mt-10 max-w-2xl font-body text-base md:text-lg leading-relaxed text-ash">
+          Operations consulting and automation for businesses ready to fix what&apos;s
+          underneath before adding what&apos;s on top.
+        </p>
+
         {/* CTA */}
-        <div className="hero-cta mt-[52px]">
+        <div className="hero-cta mt-[44px]">
           <Button href="/book" variant="primary">
-            Book a Consultation
+            Book your Review
           </Button>
         </div>
       </div>

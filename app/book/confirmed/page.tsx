@@ -242,19 +242,19 @@ export default async function ConfirmedPage({ searchParams }: PageProps) {
               href={result.rescheduleUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-sm tracking-wider uppercase text-off-white underline underline-offset-4 hover:text-burgundy transition-colors"
+              className="text-sm tracking-wider uppercase text-off-white underline underline-offset-4 hover:text-burgundy transition-colors"
             >
               Reschedule →
             </a>
           ) : (
             <a
               href="mailto:hello@okamilabs.com?subject=Reschedule%20request"
-              className="font-mono text-sm tracking-wider uppercase text-off-white underline underline-offset-4 hover:text-burgundy transition-colors"
+              className="text-sm tracking-wider uppercase text-off-white underline underline-offset-4 hover:text-burgundy transition-colors"
             >
               Email to reschedule →
             </a>
           )}
-          <p className="font-mono text-[10px] text-ash/50 mt-4">
+          <p className="text-xs text-ash/50 mt-4">
             Reschedule up to 24 hours before or cancellation fees apply.
           </p>
         </div>
@@ -267,14 +267,14 @@ export default async function ConfirmedPage({ searchParams }: PageProps) {
         </div>
 
         {result.email && (
-          <p className="font-mono text-[10px] text-ash/40 mt-16">
+          <p className="text-xs text-ash/40 mt-16">
             Receipt sent to {result.email}.
           </p>
         )}
 
         {/* Degraded-booking note (Cal booking failed post-charge, rare) */}
         {params.pi && !result.rescheduleUrl && !slotLabel && (
-          <p className="font-mono text-[10px] text-ash/50 mt-4 max-w-sm mx-auto leading-relaxed">
+          <p className="text-xs text-ash/50 mt-4 max-w-sm mx-auto leading-relaxed">
             <Link href="mailto:hello@okamilabs.com" className="text-off-white underline underline-offset-4">
               hello@okamilabs.com
             </Link>{' '}

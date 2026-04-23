@@ -96,7 +96,7 @@ export default function PrivacyPage() {
                 itself. To communicate about consultations, Okami Review results, or project
                 updates. To monitor performance and security.
               </p>
-              <p className="font-mono text-sm text-off-white mt-6">
+              <p className="font-playfair italic text-lg text-off-white mt-6">
                 Okami does not sell or rent data. Ever.
               </p>
             </div>
@@ -228,7 +228,7 @@ export default function PrivacyPage() {
                 { title: 'Right to Restrict', desc: 'Limit how data is used while resolving a dispute or verifying information.' },
               ].map((right) => (
                 <div key={right.title} className="bg-dark p-6 lg:p-8">
-                  <h3 className="font-mono text-sm text-off-white mb-2">{right.title}</h3>
+                  <h3 className="font-playfair text-lg text-off-white mb-2">{right.title}</h3>
                   <p className="font-body text-sm leading-relaxed text-ash">{right.desc}</p>
                 </div>
               ))}
@@ -255,7 +255,7 @@ export default function PrivacyPage() {
               acquisition, data may be transferred with advance notice and equivalent
               protections.
             </p>
-            <p className="font-mono text-sm text-off-white">
+            <p className="font-playfair italic text-lg text-off-white">
               Okami does not sell data, share data for marketing without explicit consent,
               or use data for purposes unrelated to its services.
             </p>
@@ -338,7 +338,7 @@ export default function PrivacyPage() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Link
             href="/"
-            className="font-mono text-sm uppercase tracking-widest text-ash hover:text-off-white transition-colors"
+            className="text-sm uppercase tracking-widest text-ash hover:text-off-white transition-colors"
           >
             &larr; Back to Home
           </Link>

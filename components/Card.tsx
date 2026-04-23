@@ -8,6 +8,7 @@ interface CardProps {
   tag: string;
   title: string;
   description: string;
+  tagline?: string;
   href?: string;
   linkText?: string;
   accent?: CardAccent;
@@ -31,6 +32,7 @@ export default function Card({
   tag,
   title,
   description,
+  tagline,
   href,
   linkText = 'Learn more',
   accent = 'ash',
@@ -55,6 +57,12 @@ export default function Card({
       <p className="font-body text-sm leading-relaxed text-ash">
         {description}
       </p>
+
+      {tagline && (
+        <p className="mt-4 font-playfair italic text-sm leading-relaxed text-off-white/80">
+          {tagline}
+        </p>
+      )}
 
       {href && (
         <div className="mt-6 flex items-center gap-2 font-mono text-xs tracking-wider uppercase text-ash group-hover:text-off-white transition-colors">

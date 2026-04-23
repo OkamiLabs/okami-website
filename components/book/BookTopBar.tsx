@@ -14,13 +14,13 @@ export default function BookTopBar() {
               className="object-cover scale-[1.15]"
             />
           </div>
-          <span className="font-mono text-sm tracking-wider uppercase text-off-white">
+          <span className="text-sm tracking-wider uppercase text-off-white">
             Okami
           </span>
         </Link>
         <Link
           href="/"
-          className="font-mono text-xs tracking-widest uppercase text-ash hover:text-off-white transition-colors"
+          className="text-xs tracking-widest uppercase text-ash hover:text-off-white transition-colors"
         >
           Exit
         </Link>

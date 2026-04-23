@@ -132,7 +132,7 @@ const FormField = forwardRef<AnyInputRef, FormFieldProps>(function FormField(
         <p
           id={errorId}
           role="alert"
-          className="mt-2 font-mono text-xs text-off-white"
+          className="mt-2 font-body text-xs text-off-white"
         >
           <span className="text-burgundy mr-2">—</span>
           {error}

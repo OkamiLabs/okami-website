@@ -244,12 +244,12 @@ export default function TimePicker({ calLink, onSlotSelect, selectedSlot }: Time
         ) : apiError ? (
           /* API not configured or error */
           <div className="py-8 space-y-4">
-            <p className="font-mono text-xs text-ash/60">{apiError}</p>
+            <p className="font-body text-xs text-ash/60">{apiError}</p>
             <a
               href={directUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-xs text-off-white underline underline-offset-4 hover:text-off-white/70 transition-colors"
+              className="text-xs text-off-white underline underline-offset-4 hover:text-off-white/70 transition-colors"
             >
               Book directly on Cal.com →
             </a>

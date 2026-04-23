@@ -80,7 +80,7 @@ function CancelledInner() {
           <button
             type="button"
             onClick={() => router.replace('/book')}
-            className="font-mono text-xs tracking-[0.22em] uppercase text-burgundy hover:text-off-white underline underline-offset-4 transition-colors"
+            className="text-xs tracking-[0.22em] uppercase text-burgundy hover:text-off-white underline underline-offset-4 transition-colors"
           >
             Take me there now →
           </button>
@@ -92,7 +92,7 @@ function CancelledInner() {
           </p>
         )}
 
-        <p className="font-mono text-[10px] text-ash/40 mt-16 max-w-md mx-auto leading-relaxed">
+        <p className="text-xs text-ash/40 mt-16 max-w-md mx-auto leading-relaxed">
           Trouble with the payment form? Email{' '}
           <a
             href="mailto:hello@okamilabs.com"

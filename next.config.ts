@@ -7,10 +7,17 @@ const nextConfig: NextConfig = {
     return [
       // Old /contact surface is gone — all booking lives at /book now.
       { source: '/contact', destination: '/book', permanent: true },
+      // /building renamed to /products.
+      { source: '/building', destination: '/products', permanent: true },
     ];
   },
 
   async headers() {
+    const isDev = process.env.NODE_ENV !== 'production';
+    const scriptSrc = isDev
+      ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://va.vercel-scripts.com"
+      : "script-src 'self' 'unsafe-inline' https://js.stripe.com https://va.vercel-scripts.com";
+
     return [
       {
         source: '/(.*)',
@@ -25,7 +32,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://js.stripe.com https://va.vercel-scripts.com",
+              scriptSrc,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self' https://fonts.gstatic.com",

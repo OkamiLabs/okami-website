@@ -83,5 +83,83 @@ export async function GET(req: NextRequest) {
 
   const data = await slotsRes.json();
   // v2 returns { status: "success", data: { "YYYY-MM-DD": [...] } }
-  return NextResponse.json({ slots: data.data ?? data.slots ?? {} });
+  const rawSlots: Record<string, unknown> = data.data ?? data.slots ?? {};
+
+  return NextResponse.json({
+    slots: applyLeadTimeRules(rawSlots, eventTypeSlug, timeZone, new Date()),
+  });
+}
+
+/**
+ * Event-specific minimum lead time between "now" and the next bookable slot.
+ *
+ * - Okami Review (`okami-review`): no same-day availability at all. Today's slots
+ *   are dropped. Also enforced in Cal.com event-type settings as a backup.
+ * - Discovery Call (`discovery-call`): same-day OK, but slot must be at least
+ *   2 hours from now. Today's slots before the threshold are dropped.
+ * - Anything else: passes through unchanged.
+ *
+ * Filtering here keeps the UI simple (TimePicker just renders what it receives)
+ * and guarantees the rule applies regardless of client clock skew.
+ */
+function applyLeadTimeRules(
+  rawSlots: Record<string, unknown>,
+  eventTypeSlug: string,
+  timeZone: string,
+  now: Date
+): Record<string, unknown> {
+  const todayYMD = formatYMDInTimeZone(now, timeZone);
+  const DC_MIN_LEAD_MS = 2 * 60 * 60 * 1000;
+
+  const filtered: Record<string, unknown> = {};
+
+  for (const [dateKey, arr] of Object.entries(rawSlots)) {
+    if (!Array.isArray(arr)) continue;
+
+    // Future days always pass through.
+    if (dateKey !== todayYMD) {
+      filtered[dateKey] = arr;
+      continue;
+    }
+
+    if (eventTypeSlug === 'okami-review') {
+      // Drop today's slots entirely — no same-day reviews.
+      continue;
+    }
+
+    if (eventTypeSlug === 'discovery-call') {
+      const threshold = now.getTime() + DC_MIN_LEAD_MS;
+      const kept = arr.filter((s) => {
+        const iso =
+          typeof s === 'string'
+            ? s
+            : (s && typeof s === 'object'
+                ? ((s as { start?: string; time?: string }).start ??
+                   (s as { start?: string; time?: string }).time ??
+                   '')
+                : '');
+        if (!iso) return false;
+        const t = new Date(iso).getTime();
+        return Number.isFinite(t) && t >= threshold;
+      });
+      if (kept.length > 0) filtered[dateKey] = kept;
+      continue;
+    }
+
+    // Unknown event type — pass through without filtering.
+    filtered[dateKey] = arr;
+  }
+
+  return filtered;
+}
+
+/** Returns YYYY-MM-DD as seen in the given IANA timezone. */
+function formatYMDInTimeZone(date: Date, timeZone: string): string {
+  // en-CA yields YYYY-MM-DD; timeZone ensures the "today" pivot matches the user's view.
+  try {
+    return date.toLocaleDateString('en-CA', { timeZone });
+  } catch {
+    // Fall back to UTC if an invalid zone slips through.
+    return date.toISOString().slice(0, 10);
+  }
 }

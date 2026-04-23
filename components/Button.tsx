@@ -85,7 +85,7 @@ export default function Button({
     </>
   );
 
-  const baseClassName = `group relative inline-flex items-center justify-center gap-3 font-mono uppercase ${sizeStyles[size]} ${textColor} transition-colors duration-300 ${disabled ? 'opacity-40 pointer-events-none' : ''} ${className}`;
+  const baseClassName = `group relative inline-flex items-center justify-center gap-3 uppercase ${sizeStyles[size]} ${textColor} transition-colors duration-300 ${disabled ? 'opacity-40 pointer-events-none' : ''} ${className}`;
 
   if (href && !disabled) {
     return (

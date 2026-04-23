@@ -19,7 +19,7 @@ export default function ServicesPage() {
       <section className="border-b border-ash/10">
         <div className="max-w-7xl mx-auto px-6 py-32 lg:py-40">
           <div className="grid lg:grid-cols-12 gap-12 items-end">
-            <div className="lg:col-span-8">
+            <div className="lg:col-span-7">
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-12 h-[2px] bg-burgundy" />
                 <span className="font-mono text-xs uppercase tracking-widest text-burgundy">
@@ -27,10 +27,10 @@ export default function ServicesPage() {
                 </span>
               </div>
               <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl leading-[1.05] text-off-white">
-                Every engagement begins with understanding what's actually happening.
+                Frameworks don&apos;t fix what they can&apos;t see.
               </h1>
             </div>
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-5">
               <p className="font-body text-base leading-relaxed text-ash">
                 Okami Consulting starts where most consulting skips to the end — with what's
                 actually happening. Every engagement begins with <span className="font-playfair italic text-off-white">the Okami Review</span>: a 45-minute
@@ -53,7 +53,7 @@ export default function ServicesPage() {
                 The Okami Review.
               </h2>
 
-              <p className="font-mono text-lg text-burgundy mb-12">
+              <p className="font-playfair italic text-2xl text-burgundy mb-12">
                 The clearest picture of how your business runs.
               </p>
 
@@ -71,7 +71,7 @@ export default function ServicesPage() {
               </div>
 
               <Button href="/book" variant="consulting" size="lg">
-                Request Your Review
+                Book your Review
               </Button>
             </div>
 
@@ -146,7 +146,7 @@ export default function ServicesPage() {
                 <span className="font-mono text-7xl lg:text-8xl text-burgundy/10 group-hover:text-burgundy/20 transition-colors block leading-none mb-8">
                   {step.num}
                 </span>
-                <h3 className="font-mono text-xl text-off-white mb-4">{step.title}</h3>
+                <h3 className="font-playfair text-2xl text-off-white mb-4">{step.title}</h3>
                 <p className="font-body text-sm leading-relaxed text-ash">{step.desc}</p>
               </div>
             ))}
@@ -190,7 +190,7 @@ export default function ServicesPage() {
             ].map((area) => (
               <div key={area.title} className="bg-dark p-8 lg:p-10">
                 <div className="w-8 h-[2px] bg-burgundy mb-6" />
-                <h3 className="font-mono text-lg text-off-white mb-4">{area.title}</h3>
+                <h3 className="font-playfair text-2xl text-off-white mb-4">{area.title}</h3>
                 <p className="font-body text-sm leading-relaxed text-ash">{area.body}</p>
               </div>
             ))}
@@ -198,23 +198,61 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* What This Isn't */}
+      {/* What This Isn't — split negation */}
       <section className="border-b border-ash/10 bg-burgundy/[0.03]">
-        <div className="max-w-4xl mx-auto px-6 py-24 lg:py-32">
-          <h2 className="font-playfair text-4xl md:text-5xl leading-[1.1] text-off-white mb-8">
+        <div className="max-w-5xl mx-auto px-6 py-24 lg:py-32">
+          <h2 className="font-playfair text-4xl md:text-5xl leading-[1.1] text-off-white mb-16 max-w-2xl">
             What Okami Consulting is not.
           </h2>
-          <div className="space-y-6 max-w-2xl">
-            <p className="font-body text-base leading-relaxed text-ash">
-              This isn't management consulting with templated frameworks and transformation
-              roadmaps. It's not a pitch for proprietary software. It's not surface-level advice
-              that looks good in presentations but can't be executed.
-            </p>
-            <p className="font-body text-base leading-relaxed text-ash">
-              Okami Consulting is operational work. Detailed. Sometimes tedious. Always focused
-              on fixing what's broken. The goal isn't to impress — it's to build systems that
-              actually work.
-            </p>
+
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
+            {/* Left: the negations */}
+            <div>
+              <span className="font-mono text-xs uppercase tracking-widest text-ash/60 block mb-8">
+                This isn&apos;t
+              </span>
+              <ul className="space-y-0">
+                {[
+                  'Management consulting with templated frameworks',
+                  'Transformation roadmaps without execution',
+                  'A pitch for proprietary software',
+                  'Surface-level advice that looks good in presentations',
+                ].map((item, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-4 py-4 border-b border-ash/10 last:border-0"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-[10px] text-burgundy/50 mt-1.5 flex-shrink-0 tracking-widest"
+                    >
+                      ✕
+                    </span>
+                    <p className="font-body text-base leading-relaxed text-ash/70 line-through decoration-ash/30 decoration-1">
+                      {item}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Right: what it IS */}
+            <div>
+              <span className="font-mono text-xs uppercase tracking-widest text-burgundy block mb-8">
+                It is
+              </span>
+              <p className="font-playfair text-3xl md:text-4xl leading-[1.2] text-off-white mb-8">
+                Operational work.
+              </p>
+              <div className="space-y-4">
+                <p className="font-body text-base leading-[1.8] text-ash">
+                  Detailed. Sometimes tedious. Always focused on fixing what&apos;s broken.
+                </p>
+                <p className="font-body text-base leading-[1.8] text-ash">
+                  The goal isn&apos;t to impress — it&apos;s to build systems that actually work.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -222,7 +260,7 @@ export default function ServicesPage() {
       {/* Final CTA */}
       <CTASection
         headline="Start with the Okami Review."
-        subheadline="Fifteen minutes to talk through your workflows and see if the review is the right fit. No pitch."
+        subheadline="Operational work starts with seeing the business as it is."
         buttonText="Book your Review"
         buttonHref="/book"
         buttonVariant="consulting"

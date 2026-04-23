@@ -42,6 +42,7 @@
 
 .hero-eyebrow,
 .hero-headline,
+.hero-subhead,
 .hero-cta {
   opacity: 0;
 }
@@ -54,8 +55,11 @@
     hero-surge-transform 1.85s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.35s,
     hero-surge-fade 2.5s linear forwards 0.35s;
 }
+.hero-playing .hero-subhead {
+  animation: hero-cta-in 0.7s ease forwards 1.2s;
+}
 .hero-playing .hero-cta {
-  animation: hero-cta-in 0.7s ease forwards 1.55s;
+  animation: hero-cta-in 0.7s ease forwards 1.7s;
 }
 
 @layer base {
@@ -137,12 +141,14 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-eyebrow,
   .hero-headline,
+  .hero-subhead,
   .hero-cta {
     opacity: 1;
   }
 
   .hero-playing .hero-eyebrow,
   .hero-playing .hero-headline,
+  .hero-playing .hero-subhead,
   .hero-playing .hero-cta {
     animation: none;
     opacity: 1;

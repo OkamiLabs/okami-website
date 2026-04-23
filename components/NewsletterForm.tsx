@@ -50,7 +50,7 @@ export default function NewsletterForm() {
             framework for seeing where your business actually stands before adding tools or
             technology.
           </p>
-          <p className="font-mono text-xs text-ash/60">
+          <p className="font-body text-xs text-ash/60">
             Didn&apos;t get it? Check your spam folder or promotions tab.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function NewsletterForm() {
                 placeholder="your@email.com"
                 required
                 disabled={status === 'loading'}
-                className="w-full px-6 py-4 bg-dark border border-ash/20 text-off-white font-mono text-sm placeholder:text-ash/50 focus:outline-none focus:border-off-white transition-colors disabled:opacity-50"
+                className="w-full px-6 py-4 bg-dark border border-ash/20 text-off-white font-body text-sm placeholder:text-ash/50 focus:outline-none focus:border-off-white transition-colors disabled:opacity-50"
               />
             </div>
 
@@ -92,13 +92,13 @@ export default function NewsletterForm() {
             </Button>
 
             {status === 'error' && message && (
-              <p className="font-mono text-sm text-center text-ash">
+              <p className="font-body text-sm text-center text-ash">
                 {message}
               </p>
             )}
           </form>
 
-          <p className="mt-6 font-mono text-xs text-ash text-center leading-relaxed">
+          <p className="mt-6 font-body text-xs text-ash text-center leading-relaxed">
             Subscribe and get the scorecard Okami uses in every review — free.
           </p>
         </>

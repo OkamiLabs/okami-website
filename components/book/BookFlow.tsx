@@ -457,7 +457,7 @@ export default function BookFlow({
                     <button
                       type="button"
                       onClick={handlePaymentBack}
-                      className="font-mono text-xs tracking-[0.22em] uppercase text-off-white hover:text-burgundy underline underline-offset-4 transition-colors"
+                      className="text-xs tracking-[0.22em] uppercase text-off-white hover:text-burgundy underline underline-offset-4 transition-colors"
                     >
                       ← Back to intake
                     </button>

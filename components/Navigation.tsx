@@ -9,7 +9,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
-  { href: '/building', label: "What We're Building" },
+  { href: '/products', label: 'Products' },
   { href: '/book', label: 'Book' },
 ];
 
@@ -85,7 +85,7 @@ export default function Navigation() {
                   className="object-cover scale-[1.15]"
                 />
               </div>
-              <span className="font-mono text-sm tracking-wider uppercase text-off-white">
+              <span className="text-sm tracking-wider uppercase text-off-white">
                 Okami
               </span>
             </Link>
@@ -96,7 +96,7 @@ export default function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`font-mono text-xs tracking-widest uppercase transition-colors duration-200 relative group ${
+                  className={`text-xs tracking-widest uppercase transition-colors duration-200 relative group ${
                     isActive(link.href) ? 'text-off-white' : 'text-ash hover:text-off-white'
                   }`}
                 >
@@ -155,7 +155,7 @@ export default function Navigation() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`font-mono text-lg tracking-widest uppercase transition-all duration-300 ${
+                className={`text-lg tracking-widest uppercase transition-all duration-300 ${
                   isActive(link.href) ? 'text-off-white' : 'text-ash hover:text-off-white'
                 }`}
                 style={{

@@ -142,7 +142,7 @@ export default function TermsPage() {
               decisions made based on Okami Review reports, or technical downtime caused by
               third-party services.
             </p>
-            <p className="font-mono text-sm text-off-white">
+            <p className="font-playfair italic text-lg text-off-white">
               Maximum liability is limited to the amount paid for services.
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Link
             href="/"
-            className="font-mono text-sm uppercase tracking-widest text-ash hover:text-off-white transition-colors"
+            className="text-sm uppercase tracking-widest text-ash hover:text-off-white transition-colors"
           >
             &larr; Back to Home
           </Link>
