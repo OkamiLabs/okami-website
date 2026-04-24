@@ -16,8 +16,8 @@ export default function ProductsPage() {
   return (
     <main className="min-h-screen bg-dark">
       {/* Hero */}
-      <section className="border-b border-ash/10">
-        <div className="max-w-7xl mx-auto px-6 py-32 lg:py-40">
+      <section className="relative border-b border-ash/10 min-h-[calc(100vh-5rem)] flex items-center">
+        <div className="max-w-7xl mx-auto px-6 py-20 w-full">
           <div className="max-w-4xl">
             <div className="flex items-center gap-4 mb-8">
               <div className="w-12 h-[2px] bg-slate-blue" />
@@ -25,27 +25,21 @@ export default function ProductsPage() {
                 Okami Labs
               </span>
             </div>
-            <h1 className="font-playfair text-5xl md:text-7xl lg:text-8xl leading-[1.05] text-off-white mb-10">
+            <h1 className="font-playfair text-4xl md:text-6xl lg:text-7xl leading-[1.05] text-off-white mb-10">
               You&apos;re working harder than the business is growing.
             </h1>
-            <div className="space-y-6 max-w-2xl mb-12">
-              <p className="font-body text-lg md:text-xl leading-relaxed text-ash">
-                More revenue. More hours. More tools. Same margins, or worse. The work keeps
-                expanding while the returns flatten.
-              </p>
-              <p className="font-body text-lg md:text-xl leading-relaxed text-ash">
-                The gap between effort and outcome is not a motivation problem. It is a system
-                problem. And systems are fixable.
-              </p>
-            </div>
+            <p className="font-body text-lg md:text-xl leading-relaxed text-ash max-w-2xl mb-12">
+              The gap between effort and outcome isn&apos;t a motivation problem. It&apos;s a system
+              problem. And systems are fixable.
+            </p>
             <Button href="/book" variant="primary" size="lg">
               Book your Review
             </Button>
-            <p className="mt-8 font-playfair italic text-base md:text-lg text-off-white/70">
-              Okami Labs ships what Okami Labs runs.
-            </p>
           </div>
         </div>
+        <p className="hidden md:block absolute bottom-8 right-8 font-playfair italic text-sm text-off-white/25 tracking-wide">
+          Okami Labs ships what Okami Labs runs.
+        </p>
       </section>
 
       {/* The Mountain */}

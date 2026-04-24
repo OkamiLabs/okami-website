@@ -82,12 +82,16 @@ function formatSelectedDayLabel(ymd: string): string {
 
 /* ── Component ──────────────────────────────────────────────────── */
 
+const MAX_AUTO_ADVANCE_WEEKS = 8;
+
 export default function TimePicker({ calLink, onSlotSelect, selectedSlot }: TimePickerProps) {
   const [weekOffset, setWeekOffset] = useState(getInitialWeekOffset);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [slots, setSlots] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [userNavigated, setUserNavigated] = useState(false);
+  const [autoAdvanceCount, setAutoAdvanceCount] = useState(0);
 
   const monday = getMondayOfWeek(weekOffset);
   const weekDays = Array.from({ length: 5 }, (_, i) => {
@@ -118,6 +122,7 @@ export default function TimePicker({ calLink, onSlotSelect, selectedSlot }: Time
         const data = await res.json().catch(() => ({}));
         setApiError(data.error || 'Unable to load availability.');
         setSlots({});
+        setLoading(false);
         return;
       }
 
@@ -134,20 +139,30 @@ export default function TimePicker({ calLink, onSlotSelect, selectedSlot }: Time
       setSlots(normalized);
 
       // Auto-select first available future day
+      const firstAvailable = weekDays.find(
+        (d) => !isPast(d) && (normalized[toYMD(d)]?.length ?? 0) > 0
+      );
+
       setSelectedDay((prev) => {
         if (prev && normalized[prev]?.length) return prev; // keep if still valid
-        const first = weekDays.find((d) => !isPast(d) && (normalized[toYMD(d)]?.length ?? 0) > 0);
-        return first ? toYMD(first) : null;
+        return firstAvailable ? toYMD(firstAvailable) : null;
       });
+
+      // If this week is empty and the user hasn't manually navigated,
+      // advance to the next week to find the earliest real availability.
+      if (!firstAvailable && !userNavigated && autoAdvanceCount < MAX_AUTO_ADVANCE_WEEKS) {
+        setAutoAdvanceCount((n) => n + 1);
+        setWeekOffset((n) => n + 1);
+        return; // keep loading=true; next fetch triggers via weekOffset change
+      }
     } catch {
       setApiError('Network error. Check your connection and try again.');
       setSlots({});
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
     // weekDays is intentionally omitted — it's derived from weekOffset which IS in deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calLink, weekOffset]);
+  }, [calLink, weekOffset, userNavigated, autoAdvanceCount]);
 
   useEffect(() => {
     fetchSlots();
@@ -167,6 +182,7 @@ export default function TimePicker({ calLink, onSlotSelect, selectedSlot }: Time
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => {
+            setUserNavigated(true);
             setWeekOffset((n) => n - 1);
             setSelectedDay(null);
           }}
@@ -180,6 +196,7 @@ export default function TimePicker({ calLink, onSlotSelect, selectedSlot }: Time
         </span>
         <button
           onClick={() => {
+            setUserNavigated(true);
             setWeekOffset((n) => n + 1);
             setSelectedDay(null);
           }}
