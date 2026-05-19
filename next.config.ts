@@ -42,6 +42,16 @@ const nextConfig: NextConfig = {
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
+              // SEC-02: This site-wide CSP overrides any route-handler `frame-ancestors`
+              // header. `app/admin/conversations/route.ts` sets `frame-ancestors 'none'`,
+              // but that route-level header is replaced by this `'self'` value at the
+              // edge — same-origin framing of /admin/* is therefore allowed in practice.
+              // Mitigation: admin routes are gated by HTTP Basic Auth in `proxy.ts`, so
+              // any same-origin framer would still hit the auth challenge before reaching
+              // protected data. Do NOT change `'self'` to `'none'` here without first
+              // moving admin under its own host (e.g. admin.okamilabs.com) or accepting
+              // that all framing across the site breaks — including any internal preview
+              // tooling that frames the public site.
               "frame-ancestors 'self'",
             ].join('; '),
           },
