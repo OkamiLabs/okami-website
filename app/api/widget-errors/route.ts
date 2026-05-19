@@ -16,7 +16,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { ipAddress } from '@vercel/functions';
 import { z } from 'zod';
 import { getVerifiedVisitorId } from '@/lib/visitor';
-import { checkChatRateLimit } from '@/lib/rate-limit-chat';
+import { checkChatRateLimit, opportunisticCleanup } from '@/lib/rate-limit-chat';
 import * as Sentry from '@sentry/nextjs';
 
 export const runtime = 'nodejs';
@@ -66,6 +66,7 @@ export async function POST(request: NextRequest) {
   const rateLimitKey = visitorId ?? ip;
 
   const limit = await checkChatRateLimit('ip', rateLimitKey, { max: 30, windowSec: 600 });
+  opportunisticCleanup().catch(() => {});
   if (!limit.allowed) {
     return new NextResponse(null, {
       status: 429,

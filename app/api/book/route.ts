@@ -32,7 +32,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 interface IntakePayload {
   name: string;
   email: string;
-  role: string;
+  role?: string;
   challenge: string;
   // Review-only:
   company?: string;
@@ -120,7 +120,7 @@ function validate(body: unknown): { ok: true; data: RequestBody } | { ok: false;
       intake: {
         name: (i.name as string).trim(),
         email: (i.email as string).trim().toLowerCase(),
-        role: (i.role as string).trim(),
+        role: (i.role as string | undefined)?.trim(),
         challenge: (i.challenge as string).trim(),
         company: (i.company as string | undefined)?.trim(),
         companySize: (i.companySize as string | undefined)?.trim(),
