@@ -17,6 +17,7 @@ import { ipAddress } from '@vercel/functions';
 import { z } from 'zod';
 import { getVerifiedVisitorId } from '@/lib/visitor';
 import { checkChatRateLimit } from '@/lib/rate-limit-chat';
+import * as Sentry from '@sentry/nextjs';
 
 export const runtime = 'nodejs';
 
@@ -72,6 +73,16 @@ export async function POST(request: NextRequest) {
     });
   }
 
+  Sentry.captureException(new Error(parsed.data.message), {
+    level: 'error',
+    tags: { source: 'widget-client', widgetVersion: parsed.data.widgetVersion ?? 'unknown' },
+    extra: {
+      stack: parsed.data.stack,
+      url: parsed.data.url,
+      visitorId,
+      ip,
+    },
+  });
   console.error('[widget-error]', { visitorId, ip, ...parsed.data });
 
   return new NextResponse(null, { status: 204 });
