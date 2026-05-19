@@ -18,6 +18,7 @@ import { stripe, isStripeConfigured, toRef } from '@/lib/stripe';
 import { createBooking, CalBookingError } from '@/lib/cal-bookings';
 import { getClientIp } from '@/lib/rate-limit';
 import { checkChatRateLimit, opportunisticCleanup } from '@/lib/rate-limit-chat';
+import * as Sentry from '@sentry/nextjs';
 
 const REVIEW_PRICE_CENTS = 29900;
 const CAL_USERNAME = 'okami';
@@ -268,6 +269,17 @@ export async function POST(request: NextRequest) {
     const status = isCalErr ? err.status : 500;
 
     if (serviceId === 'review' && paymentIntentId) {
+      Sentry.captureException(err, {
+        level: 'fatal',
+        tags: { event: 'BOOKING_FAILED_POST_CHARGE', path: 'api/book' },
+        extra: {
+          paymentIntentId,
+          slotIso,
+          email: intake.email,
+          calStatus: isCalErr ? (err as CalBookingError).status : null,
+          calBody: isCalErr ? (err as CalBookingError).body : null,
+        },
+      });
       console.error(
         '[BOOKING_FAILED_POST_CHARGE]',
         JSON.stringify({
