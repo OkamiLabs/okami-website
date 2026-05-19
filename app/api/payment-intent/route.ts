@@ -10,7 +10,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
 import { stripe, isStripeConfigured } from '@/lib/stripe';
-import { isRateLimited, getClientIp } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/rate-limit';
+import { checkChatRateLimit, opportunisticCleanup } from '@/lib/rate-limit-chat';
 
 const REVIEW_PRICE_CENTS = 29900;
 const REVIEW_CAL_LINK = 'okami/okami-review';
@@ -108,10 +109,12 @@ export async function POST(request: NextRequest) {
   }
 
   const ip = getClientIp(request.headers);
-  if (isRateLimited(ip, { max: 10, windowMs: 60 * 1000 })) {
+  const rateLimit = await checkChatRateLimit('ip', ip, { max: 10, windowSec: 60 });
+  opportunisticCleanup().catch(() => {});
+  if (!rateLimit.allowed) {
     return NextResponse.json(
       { error: 'rate_limit', message: 'Too many requests. Please wait a minute.' },
-      { status: 429 }
+      { status: 429, headers: { 'Retry-After': String(rateLimit.retryAfter ?? 60) } }
     );
   }
 
