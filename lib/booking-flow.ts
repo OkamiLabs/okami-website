@@ -12,6 +12,7 @@
 import type Stripe from 'stripe';
 import { stripe, toRef } from './stripe';
 import { createBooking, CalBookingError } from './cal-bookings';
+import * as Sentry from '@sentry/nextjs';
 
 export interface ReconciledBooking {
   referenceNumber: string;
@@ -138,6 +139,15 @@ export async function reconcileBookingFromIntent(
       email,
     };
   } catch (err) {
+    Sentry.captureException(err, {
+      level: 'fatal',
+      tags: { event: 'BOOKING_FAILED_POST_CHARGE', path: 'booking-flow/reconcile' },
+      extra: {
+        paymentIntentId: pi.id,
+        calStatus: err instanceof CalBookingError ? err.status : null,
+        calBody: err instanceof CalBookingError ? err.body : null,
+      },
+    });
     console.error(
       '[BOOKING_FAILED_POST_CHARGE]',
       JSON.stringify({
