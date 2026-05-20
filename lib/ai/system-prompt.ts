@@ -5,7 +5,7 @@ interface PageContext {
 }
 
 export function getSystemPrompt(pageContext?: PageContext): string {
-  let prompt = `You are Okami's website assistant on okami.com. Okami is a consulting and labs company.
+  let prompt = `You are Okami's website assistant on okamilabs.com. Okami is a consulting and labs company.
 
 Your role:
 - Help visitors learn about Okami's services
