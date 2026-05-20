@@ -14,8 +14,8 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
-import { timingSafeEqual } from 'node:crypto';
 import { geolocation } from '@vercel/functions';
+import { verifyAdminBasicAuth } from '@/lib/admin-auth';
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
@@ -44,65 +44,6 @@ function safeParseOrigin(referer: string | null): string | null {
   }
 }
 
-async function verifyAdminBasicAuth(request: NextRequest): Promise<boolean> {
-  const header = request.headers.get('authorization');
-  if (!header?.startsWith('Basic ')) return false;
-
-  const expectedUser = process.env.ADMIN_USER;
-  const expectedHashHex = process.env.ADMIN_PASSWORD_HASH;
-  const pepper = process.env.ADMIN_AUTH_PEPPER;
-  if (!expectedUser || !expectedHashHex || !pepper) return false;
-
-  let decoded: string;
-  try {
-    decoded = atob(header.slice(6));
-  } catch {
-    return false;
-  }
-  const idx = decoded.indexOf(':');
-  if (idx < 0) return false;
-  const user = decoded.slice(0, idx);
-  const password = decoded.slice(idx + 1);
-
-  // Constant-time username compare using timingSafeEqual.
-  // Pad both sides to equal length so length alone reveals nothing; if lengths
-  // differ we inject a guaranteed mismatch byte so the compare returns false.
-  {
-    const userBuf = Buffer.from(user, 'utf8');
-    const expectedBuf = Buffer.from(expectedUser, 'utf8');
-    const len = Math.max(userBuf.length, expectedBuf.length);
-    const a = Buffer.alloc(len, 0);
-    const b = Buffer.alloc(len, 0);
-    userBuf.copy(a);
-    expectedBuf.copy(b);
-    // If original lengths differ, force a mismatch byte at position 0 of `a`
-    // so timingSafeEqual returns false regardless of contents.
-    if (userBuf.length !== expectedBuf.length) {
-      a[0] = a[0] ^ 0xff;
-    }
-    if (!timingSafeEqual(a, b)) return false;
-  }
-
-  // HMAC-SHA256(pepper, password) → hex, constant-time compare to expectedHashHex.
-  const key = await crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(pepper),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign'],
-  );
-  const sigBuf = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(password));
-  const sigHex = Array.from(new Uint8Array(sigBuf))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-
-  if (sigHex.length !== expectedHashHex.length) return false;
-  let hashOk = 0;
-  for (let i = 0; i < sigHex.length; i++) {
-    hashOk |= sigHex.charCodeAt(i) ^ expectedHashHex.charCodeAt(i);
-  }
-  return hashOk === 0;
-}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

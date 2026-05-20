@@ -16,8 +16,9 @@
  * in next.config.ts.
  */
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db/client';
+import { verifyAdminBasicAuth } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 
@@ -178,8 +179,9 @@ function renderPage(
 </html>`;
 }
 
-// Auth is enforced upstream in proxy.ts (HMAC-hashed basic auth, constant-time
-// compare). Requests that reach this handler are already authenticated.
+// Auth is enforced upstream in middleware.ts (via proxy.ts) AND locally below
+// as a defense-in-depth measure. Both layers use the same verifyAdminBasicAuth
+// logic from lib/admin-auth.ts so credentials are checked consistently.
 async function renderDashboard(request: Request): Promise<NextResponse> {
   const url = new URL(request.url);
   const page = Math.max(1, parseInt(url.searchParams.get('page') ?? '1', 10) || 1);
@@ -233,6 +235,16 @@ async function renderDashboard(request: Request): Promise<NextResponse> {
 }
 
 export async function GET(request: Request) {
+  const authed = await verifyAdminBasicAuth(new NextRequest(request));
+  if (!authed) {
+    return new Response('Authentication required', {
+      status: 401,
+      headers: {
+        ...SECURITY_HEADERS,
+        'WWW-Authenticate': 'Basic realm="admin", charset="UTF-8"',
+      },
+    });
+  }
   return renderDashboard(request);
 }
 
