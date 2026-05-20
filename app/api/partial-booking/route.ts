@@ -27,12 +27,25 @@ function validate(body: unknown): Payload | null {
   if (!VALID_STEPS.has(b.step as string)) return null;
   if (b.slotIso !== null && (typeof b.slotIso !== 'string' || isNaN(Date.parse(b.slotIso as string)))) return null;
 
+  // Validate intake: must be a plain object (not array), all values must be strings,
+  // and key count must be reasonable to prevent unbounded JSONB storage.
+  let intake: Record<string, string> = {};
+  if (b.intake != null) {
+    if (typeof b.intake !== 'object' || Array.isArray(b.intake)) return null;
+    const raw = b.intake as Record<string, unknown>;
+    if (Object.keys(raw).length > 20) return null;
+    for (const v of Object.values(raw)) {
+      if (typeof v !== 'string') return null;
+    }
+    intake = raw as Record<string, string>;
+  }
+
   return {
     email: (b.email as string).trim().toLowerCase(),
     serviceId: b.serviceId as string,
     slotIso: (b.slotIso as string | null) ?? null,
     step: b.step as string,
-    intake: b.intake && typeof b.intake === 'object' ? (b.intake as Record<string, string>) : {},
+    intake,
     converted: b.converted === true,
   };
 }
