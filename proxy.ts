@@ -14,6 +14,7 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { timingSafeEqual } from 'node:crypto';
 import { geolocation } from '@vercel/functions';
 
 export const config = {
@@ -63,13 +64,24 @@ async function verifyAdminBasicAuth(request: NextRequest): Promise<boolean> {
   const user = decoded.slice(0, idx);
   const password = decoded.slice(idx + 1);
 
-  // Constant-time user compare (length mismatch short-circuits — fine for usernames).
-  if (user.length !== expectedUser.length) return false;
-  let userOk = 0;
-  for (let i = 0; i < user.length; i++) {
-    userOk |= user.charCodeAt(i) ^ expectedUser.charCodeAt(i);
+  // Constant-time username compare using timingSafeEqual.
+  // Pad both sides to equal length so length alone reveals nothing; if lengths
+  // differ we inject a guaranteed mismatch byte so the compare returns false.
+  {
+    const userBuf = Buffer.from(user, 'utf8');
+    const expectedBuf = Buffer.from(expectedUser, 'utf8');
+    const len = Math.max(userBuf.length, expectedBuf.length);
+    const a = Buffer.alloc(len, 0);
+    const b = Buffer.alloc(len, 0);
+    userBuf.copy(a);
+    expectedBuf.copy(b);
+    // If original lengths differ, force a mismatch byte at position 0 of `a`
+    // so timingSafeEqual returns false regardless of contents.
+    if (userBuf.length !== expectedBuf.length) {
+      a[0] = a[0] ^ 0xff;
+    }
+    if (!timingSafeEqual(a, b)) return false;
   }
-  if (userOk !== 0) return false;
 
   // HMAC-SHA256(pepper, password) → hex, constant-time compare to expectedHashHex.
   const key = await crypto.subtle.importKey(

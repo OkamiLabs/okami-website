@@ -51,6 +51,7 @@ export async function opportunisticCleanup(): Promise<void> {
   try {
     await sql`DELETE FROM rate_limit_buckets WHERE expires_at < NOW()`;
     await sql`DELETE FROM token_reservations WHERE reserved_at < NOW() - INTERVAL '5 minutes' AND NOT reconciled`;
+    await sql`DELETE FROM token_reservations WHERE reconciled = TRUE AND reserved_at < NOW() - INTERVAL '7 days'`;
   } catch {
     // Never block a request on cleanup failure.
   }
