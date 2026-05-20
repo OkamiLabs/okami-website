@@ -1,16 +1,12 @@
 -- Up Migration
 
 INSERT INTO services (name, description, price, duration, sort_order) VALUES
-  ('AI Strategy Consultation', 'Deep-dive session to map your AI opportunities, evaluate feasibility, and build a prioritized roadmap', '$500', '2 hours', 1),
-  ('Custom AI Development', 'End-to-end development of AI-powered applications tailored to your business needs', 'Starting at $5,000', '4-8 weeks', 2),
-  ('WhatsApp Automation', 'Intelligent WhatsApp automation for lead capture, booking, and customer engagement', 'Starting at $2,000/mo', '2-4 weeks setup', 3),
-  ('Discovery Call', 'Free introductory call to discuss your project and see if we''re a good fit', 'Free', '30 minutes', 4);
+  ('The Okami Review', 'A structured conversation that maps how your business runs, where it breaks, and what to fix first. You receive a full report with prioritized recommendations.', '$299', '45–60 min', 1),
+  ('Discovery Call', 'A 15-minute conversation to talk through what''s slowing you down and whether the review is the right fit.', 'Free', '15 min', 2);
 
 -- Down Migration
 
 DELETE FROM services WHERE name IN (
-  'AI Strategy Consultation',
-  'Custom AI Development',
-  'WhatsApp Automation',
+  'The Okami Review',
   'Discovery Call'
 );
