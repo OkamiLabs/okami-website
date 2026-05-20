@@ -46,11 +46,6 @@ export async function POST(request: NextRequest) {
     const data = validate(body);
     if (!data) return OK;
 
-    if (!process.env.DATABASE_URL) {
-      console.warn('[partial-booking] DATABASE_URL not configured — beacon discarded.');
-      return OK;
-    }
-
     const { email, serviceId, slotIso, step, intake, converted } = data;
 
     try {
