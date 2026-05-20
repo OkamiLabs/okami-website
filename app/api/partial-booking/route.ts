@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isRateLimited, getClientIp } from '@/lib/rate-limit';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { sql } from '@/lib/db/client';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const VALID_SERVICES = new Set(['review', 'discovery']);
@@ -46,25 +46,27 @@ export async function POST(request: NextRequest) {
     const data = validate(body);
     if (!data) return OK;
 
-    if (!isSupabaseConfigured() || !supabase) {
-      console.warn('[partial-booking] Supabase not configured — beacon discarded.');
+    if (!process.env.DATABASE_URL) {
+      console.warn('[partial-booking] DATABASE_URL not configured — beacon discarded.');
       return OK;
     }
 
     const { email, serviceId, slotIso, step, intake, converted } = data;
 
-    const { error } = await supabase.rpc('upsert_partial_booking', {
-      p_email: email,
-      p_service_id: serviceId,
-      p_slot_iso: slotIso,
-      p_step: step,
-      p_step_order: STEP_ORDER[step] ?? 0,
-      p_intake: intake,
-      p_converted: converted,
-    });
-
-    if (error) {
-      console.error('[partial-booking] Supabase error:', error);
+    try {
+      await sql`
+        SELECT upsert_partial_booking(
+          ${email},
+          ${serviceId},
+          ${slotIso},
+          ${step},
+          ${STEP_ORDER[step] ?? 0},
+          ${JSON.stringify(intake)}::jsonb,
+          ${converted}
+        )
+      `;
+    } catch (err) {
+      console.error('[partial-booking] Neon error:', err);
     }
 
     return OK;
