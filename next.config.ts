@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: https:",
               "font-src 'self' https://fonts.gstatic.com",
               "frame-src https://js.stripe.com https://hooks.stripe.com",
-              "connect-src 'self' https://api.stripe.com https://api.beehiiv.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+              "connect-src 'self' https://api.stripe.com https://api.beehiiv.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://o*.ingest.sentry.io",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
