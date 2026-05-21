@@ -1,7 +1,7 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import { sql } from '../db/client.js';
-import { sendSlackNotification } from '../notifications.js';
+import { sql } from '../db/client';
+import { sendSlackNotification } from '../notifications';
 
 export function getTools(visitorId: string, conversationId: string) {
   return {
