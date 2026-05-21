@@ -203,7 +203,7 @@ export async function POST(request: NextRequest) {
     });
 
     const result = streamText({
-      model: anthropic('claude-3-5-haiku-20241022'),
+      model: anthropic(process.env.AI_MODEL ?? 'claude-haiku-4-5'),
       system: systemPrompt,
       messages: convertToModelMessages(parsed.data.messages as UIMessage[]),
       tools: getTools(visitorId, activeConversationId),
