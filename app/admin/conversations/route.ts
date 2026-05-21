@@ -216,6 +216,7 @@ async function renderDashboard(request: Request): Promise<NextResponse> {
         FROM messages
        WHERE conversation_id = ANY(${conversationIds}::uuid[])
        ORDER BY created_at ASC
+       LIMIT 100
     `) as MessageRow[];
     for (const msg of msgRows) {
       const existing = messagesMap.get(msg.conversation_id);
