@@ -213,10 +213,13 @@ async function renderDashboard(request: Request): Promise<NextResponse> {
   if (conversationIds.length > 0) {
     const msgRows = (await sql`
       SELECT id, conversation_id, role, content, token_usage, tool_calls::text, created_at::text
-        FROM messages
-       WHERE conversation_id = ANY(${conversationIds}::uuid[])
-       ORDER BY created_at ASC
-       LIMIT 100
+        FROM (
+          SELECT *, ROW_NUMBER() OVER (PARTITION BY conversation_id ORDER BY created_at ASC) AS rn
+          FROM messages
+          WHERE conversation_id = ANY(${conversationIds}::uuid[])
+        ) ranked
+        WHERE rn <= 50
+        ORDER BY conversation_id, created_at ASC
     `) as MessageRow[];
     for (const msg of msgRows) {
       const existing = messagesMap.get(msg.conversation_id);
