@@ -36,15 +36,6 @@ export interface WidgetConfig {
 }
 
 // ---------------------------------------------------------------------------
-// Tool-call display helpers (rendered inside MessageList)
-// ---------------------------------------------------------------------------
-
-export interface ToolCallDisplay {
-  type: 'booking-confirmation' | 'lead-captured' | 'service-card';
-  data: Record<string, unknown>;
-}
-
-// ---------------------------------------------------------------------------
 // Theme presets
 // ---------------------------------------------------------------------------
 
