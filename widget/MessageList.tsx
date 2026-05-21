@@ -1,10 +1,10 @@
 import { useEffect, useRef, useCallback } from 'react';
-import type { UIMessage as Message } from '@ai-sdk/react';
+import type { UIMessage } from 'ai';
 import type { WidgetConfig } from './types/widget';
 
 interface MessageListProps {
-  messages: Message[];
-  isLoading: boolean;
+  messages: UIMessage[];
+  status: 'submitted' | 'streaming' | 'ready' | 'error';
   config: WidgetConfig;
   className?: string;
 }
@@ -26,70 +26,24 @@ const TypingIndicator: React.FC = () => (
 );
 
 // ---------------------------------------------------------------------------
-// Tool invocation cards
+// Generic tool card (D-03: one card handles all tool invocations)
 // ---------------------------------------------------------------------------
 
-interface ToolInvocation {
-  toolCallId: string;
-  toolName: string;
-  args: Record<string, unknown>;
-  state: 'partial-call' | 'call' | 'result';
-  result?: unknown;
-}
-
-const BookingCard: React.FC<{ args: Record<string, unknown> }> = ({ args }) => {
-  const date = args.preferredDate != null ? String(args.preferredDate) : null;
-  const time = args.preferredTime != null ? String(args.preferredTime) : null;
-  const when = [date, time].filter(Boolean).join(' at ') || null;
-  return (
-    <div
-      className="message__tool-card"
-      style={{
-        border: '1px solid var(--widget-success-color)',
-        borderRadius: 'var(--widget-border-radius)',
-        padding: 'var(--widget-spacing-sm) var(--widget-spacing-md)',
-        marginTop: 'var(--widget-spacing-xs)',
-        backgroundColor: 'rgba(5, 150, 105, 0.08)',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <svg width="16" height="16" fill="none" stroke="var(--widget-success-color)" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-        <strong style={{ fontSize: 'var(--widget-font-size-sm)' }}>Discovery call requested</strong>
-      </div>
-      {when && (
-        <p style={{ margin: '0.25rem 0 0', fontSize: 'var(--widget-font-size-xs)', color: 'var(--widget-text-secondary)' }}>
-          {'Requested ' + when + ' \u2014 Lucas will confirm by email'}
-        </p>
-      )}
-    </div>
-  );
-};
-
-const LeadChip: React.FC<{ args: Record<string, unknown> }> = ({ args }) => {
-  const label = args.email != null ? String(args.email) : args.name != null ? String(args.name) : 'info';
-  return (
-    <span
-      className="message__tool-chip"
-      style={{
-        display: 'inline-block',
-        fontSize: 'var(--widget-font-size-xs)',
-        color: 'var(--widget-success-color)',
-        marginTop: 'var(--widget-spacing-xs)',
-      }}
-    >
-      {'Saved: ' + label}
-    </span>
-  );
-};
-
-const ServiceCard: React.FC<{ result: unknown }> = ({ result }) => {
-  const data = (typeof result === 'object' && result !== null ? result : {}) as Record<string, unknown>;
-  const name = data.name != null ? String(data.name) : null;
-  const description = data.description != null ? String(data.description) : null;
-  const price = data.price != null ? String(data.price) : null;
-  const duration = data.duration != null ? String(data.duration) : null;
+const GenericToolCard: React.FC<{ toolName: string; result: unknown }> = ({
+  toolName,
+  result,
+}) => {
+  let resultSummary: string;
+  if (typeof result === 'string') {
+    resultSummary = result.slice(0, 120);
+  } else if (result !== null && typeof result === 'object') {
+    resultSummary = Object.entries(result as Record<string, unknown>)
+      .map(([k, v]) => `${k}: ${String(v)}`)
+      .join(' · ')
+      .slice(0, 120);
+  } else {
+    resultSummary = String(result ?? '');
+  }
 
   return (
     <div
@@ -102,38 +56,25 @@ const ServiceCard: React.FC<{ result: unknown }> = ({ result }) => {
         backgroundColor: 'var(--widget-surface-color)',
       }}
     >
-      {name && (
-        <strong style={{ fontSize: 'var(--widget-font-size-sm)', display: 'block' }}>
-          {name}
-        </strong>
-      )}
-      {description && (
-        <p style={{ margin: '0.25rem 0', fontSize: 'var(--widget-font-size-xs)', color: 'var(--widget-text-secondary)' }}>
-          {description}
-        </p>
-      )}
-      <div style={{ display: 'flex', gap: '1rem', fontSize: 'var(--widget-font-size-xs)', color: 'var(--widget-text-secondary)' }}>
-        {price && <span>{price}</span>}
-        {duration && <span>{duration}</span>}
-      </div>
+      <strong
+        style={{
+          fontSize: 'var(--widget-font-size-sm)',
+          display: 'block',
+        }}
+      >
+        {toolName}
+      </strong>
+      <p
+        style={{
+          margin: '0.25rem 0 0',
+          fontSize: 'var(--widget-font-size-xs)',
+          color: 'var(--widget-text-secondary)',
+        }}
+      >
+        {resultSummary}
+      </p>
     </div>
   );
-};
-
-const ToolCard: React.FC<{ invocation: ToolInvocation }> = ({ invocation }) => {
-  // Only render completed tool results
-  if (invocation.state !== 'result') return null;
-
-  switch (invocation.toolName) {
-    case 'bookDiscoveryCall':
-      return <BookingCard args={invocation.args} />;
-    case 'captureLeadInfo':
-      return <LeadChip args={invocation.args} />;
-    case 'lookupService':
-      return <ServiceCard result={invocation.result} />;
-    default:
-      return null;
-  }
 };
 
 // ---------------------------------------------------------------------------
@@ -161,7 +102,7 @@ const StreamingCursor: React.FC = () => (
 // ---------------------------------------------------------------------------
 
 interface MessageBubbleProps {
-  message: Message;
+  message: UIMessage;
   showStreamingCursor: boolean;
 }
 
@@ -171,20 +112,37 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, showStreamingCur
   return (
     <div className={`message ${isUser ? 'message--user' : 'message--bot'}`}>
       <div className="message__bubble">
-        {message.content && (
-          <p className="message__text" style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
-            {message.content}
-            {showStreamingCursor && <StreamingCursor />}
-          </p>
-        )}
-
-        {/* Tool invocation results */}
-        {!isUser && message.toolInvocations?.map((invocation) => (
-          <ToolCard
-            key={(invocation as ToolInvocation).toolCallId}
-            invocation={invocation as ToolInvocation}
-          />
-        ))}
+        {message.parts.map((part, i) => {
+          if (part.type === 'text') {
+            return (
+              <p
+                key={i}
+                className="message__text"
+                style={{ margin: 0, whiteSpace: 'pre-wrap' }}
+              >
+                {part.text}
+                {showStreamingCursor && i === message.parts.length - 1 && (
+                  <StreamingCursor />
+                )}
+              </p>
+            );
+          }
+          // Tool parts: type is 'tool-{toolName}' (e.g. 'tool-captureLeadInfo').
+          // Render only when output is available (state === 'output-available').
+          // Render nothing during execution (input-streaming, input-available).
+          if (part.type.startsWith('tool-') && !isUser) {
+            if ((part as { state: string }).state !== 'output-available') return null;
+            const toolName = part.type.slice(5);
+            return (
+              <GenericToolCard
+                key={i}
+                toolName={toolName}
+                result={(part as { output?: unknown }).output}
+              />
+            );
+          }
+          return null;
+        })}
       </div>
     </div>
   );
@@ -196,7 +154,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, showStreamingCur
 
 export const MessageList: React.FC<MessageListProps> = ({
   messages,
-  isLoading,
+  status,
   config,
   className = '',
 }) => {
@@ -213,21 +171,26 @@ export const MessageList: React.FC<MessageListProps> = ({
     }
   }, []);
 
-  // Scroll to bottom when messages change or loading state changes
+  // Scroll to bottom when messages change or status changes
   useEffect(() => {
     scrollToBottom();
-  }, [messages.length, isLoading, scrollToBottom]);
+  }, [messages.length, status, scrollToBottom]);
 
   // Determine if we should show the typing indicator:
-  // loading is true AND the last message is from the user (assistant hasn't started replying)
+  // status is submitted or streaming AND the last message is from the user (assistant hasn't started replying)
   const lastMessage = messages[messages.length - 1];
-  const showTypingIndicator = isLoading && lastMessage?.role === 'user';
+  const showTypingIndicator =
+    (status === 'submitted' || status === 'streaming') &&
+    lastMessage?.role === 'user';
 
   // Determine if we should show the streaming cursor on the last assistant message
   const lastAssistantIndex = findLastIndex(messages, (m) => m.role === 'assistant');
-  const showStreamingCursorOnIndex = isLoading && lastAssistantIndex >= 0 && lastAssistantIndex === messages.length - 1
-    ? lastAssistantIndex
-    : -1;
+  const showStreamingCursorOnIndex =
+    status === 'streaming' &&
+    lastAssistantIndex >= 0 &&
+    lastAssistantIndex === messages.length - 1
+      ? lastAssistantIndex
+      : -1;
 
   return (
     <div
