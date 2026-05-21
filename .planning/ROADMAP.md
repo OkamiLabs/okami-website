@@ -53,7 +53,11 @@ Plans:
   3. A visitor asking how booking works gets a clear walkthrough of the /book flow and what to expect after payment
   4. A visitor asking about "Agent Core" or "what do you build?" gets an accurate Labs/Agent Core answer
   5. A visitor asking an off-topic or adversarial question (e.g., "write me a poem") is redirected gracefully without breaking character, and a visitor expressing any booking intent is directed to /book
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 06-01-PLAN.md — Draft knowledge-complete system prompt from website sources; present for user review (D-04 approval gate)
+- [ ] 06-02-PLAN.md — Write approved prompt into system-prompt.ts, remove lookupService from tools.ts, commit
+**UI hint**: no
 
 ### Phase 7: QA & Launch Prep
 **Goal**: The chatbot passes a structured quality bar across normal, edge-case, and adversarial scenarios before CHATBOT_ENABLED is set in production
@@ -75,5 +79,5 @@ Plans:
 | 3. AI Scaffolding Cleanup | v1.0 | 2/2 | Complete | 2026-05-20 |
 | 4. Tests & Hygiene | v1.0 | 2/2 | Complete | 2026-05-21 |
 | 5. Foundation + Live AI | v2.0 | 0/3 | Not started | - |
-| 6. System Prompt + Knowledge | v2.0 | 0/? | Not started | - |
+| 6. System Prompt + Knowledge | v2.0 | 0/2 | Not started | - |
 | 7. QA & Launch Prep | v2.0 | 0/? | Not started | - |

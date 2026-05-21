@@ -58,38 +58,5 @@ export function getTools(visitorId: string, conversationId: string) {
         return 'Got it, thanks for sharing your information.';
       },
     }),
-
-    lookupService: tool({
-      description: 'Look up information about Okami services. Use when a visitor asks about specific services, pricing, or what Okami offers.',
-      inputSchema: z.object({
-        query: z.string().describe('Search query for the service'),
-      }),
-      execute: async ({ query }) => {
-        const result = (await sql`
-          SELECT name, description, price, duration
-          FROM services
-          WHERE name ILIKE ${`%${query}%`} OR description ILIKE ${`%${query}%`}
-          LIMIT 5
-        `) as Array<{
-          name: string;
-          description: string;
-          price: string | null;
-          duration: string | null;
-        }>;
-
-        if (result.length === 0) {
-          return 'I could not find a specific service matching that query. I can help you book a discovery call to discuss your needs in detail.';
-        }
-
-        return result
-          .map((s) => {
-            let line = `${s.name}: ${s.description}`;
-            if (s.price) line += ` | Price: ${s.price}`;
-            if (s.duration) line += ` | Duration: ${s.duration}`;
-            return line;
-          })
-          .join('\n');
-      },
-    }),
   };
 }
