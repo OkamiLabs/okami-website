@@ -30,12 +30,12 @@ No payment is lost silently — every Stripe charge that fails to produce a Cal.
 - ✓ Update db/migrations/002_seed_services.sql — Okami Review $299, Discovery Call Free — Validated in Phase 03: ai-scaffolding-cleanup
 
 **Observability**
-- [ ] Install @sentry/nextjs and configure DSN
-- [ ] Capture exceptions at both BOOKING_FAILED_POST_CHARGE sites (api/book, lib/booking-flow.ts)
-- [ ] Forward widget errors from /api/widget-errors to Sentry
+- ✓ Install @sentry/nextjs and configure DSN — Validated in Phase 01: revenue-protection
+- ✓ Capture exceptions at both BOOKING_FAILED_POST_CHARGE sites (api/book, lib/booking-flow.ts) — Validated in Phase 01: revenue-protection
+- ✓ Forward widget errors from /api/widget-errors to Sentry — Validated in Phase 01: revenue-protection
 
 **Payment Route Hardening**
-- [ ] Swap in-memory rate limiter on /api/book and /api/payment-intent to Neon-backed lib/rate-limit-chat.ts
+- ✓ Swap in-memory rate limiter on /api/book and /api/payment-intent to Neon-backed lib/rate-limit-chat.ts — Validated in Phase 01: revenue-protection
 
 **Database & Infrastructure**
 - ✓ Move lib/migrations/001_partial_bookings.sql to db/migrations/004_partial_bookings.sql — Validated in Phase 02: infrastructure-security
@@ -46,13 +46,13 @@ No payment is lost silently — every Stripe charge that fails to produce a Cal.
 - ✓ Document CSP frame-ancestors override (admin is basic-auth protected — note the gap clearly) — Validated in Phase 02: infrastructure-security
 
 **Code Hygiene**
-- [ ] Update CLAUDE.md to accurately describe newsletter 503 behavior (remove /tmp fallback claim)
-- [ ] Add Cache-Control: public, max-age=60, stale-while-revalidate=30 on /api/availability response
-- [ ] Add LIMIT on admin conversations message sub-query in app/admin/conversations/route.ts
-- [ ] Pin @ai-sdk/anthropic and ai to exact versions in package.json
+- ✓ Update CLAUDE.md to accurately describe newsletter 503 behavior (remove /tmp fallback claim) — Validated in Phase 04: tests-hygiene
+- ✓ Add Cache-Control: public, max-age=60, stale-while-revalidate=30 on /api/availability response — Validated in Phase 04: tests-hygiene
+- ✓ Add LIMIT on admin conversations message sub-query in app/admin/conversations/route.ts — Validated in Phase 04: tests-hygiene
+- ✓ Pin @ai-sdk/anthropic and ai to exact versions in package.json — Validated in Phase 04: tests-hygiene
 
 **Tests — Critical Path**
-- [ ] Unit tests for lib/booking-flow.ts: reconcileBookingFromIntent happy path, BOOKING_FAILED_POST_CHARGE path, ReconcileError codes
+- ✓ Unit tests for lib/booking-flow.ts: reconcileBookingFromIntent happy path, BOOKING_FAILED_POST_CHARGE path, ReconcileError codes — Validated in Phase 04: tests-hygiene
 
 ### Out of Scope
 
@@ -78,12 +78,12 @@ The booking flow is live and processing real payments. The BOOKING_FAILED_POST_C
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Install Sentry (not just Slack webhook) | Proper exception capture beats one-off webhooks; Sentry DSN vars were already reserved in .env.example | — Pending |
-| Critical-path tests only | Full booking + widget coverage is significant work; the payment-failure path is the highest risk surface | — Pending |
-| Neon-backed rate limiter for payment routes | lib/rate-limit-chat.ts already exists and works; reuse over introducing a new solution | — Pending |
+| Install Sentry (not just Slack webhook) | Proper exception capture beats one-off webhooks; Sentry DSN vars were already reserved in .env.example | Validated Phase 01 |
+| Critical-path tests only | Full booking + widget coverage is significant work; the payment-failure path is the highest risk surface | Validated Phase 04 — 6 unit tests covering all reconcile paths |
+| Neon-backed rate limiter for payment routes | lib/rate-limit-chat.ts already exists and works; reuse over introducing a new solution | Validated Phase 01 |
 
 ---
-*Last updated: 2026-05-20 — Phase 02 infrastructure-security complete*
+*Last updated: 2026-05-21 — Milestone v1.0 complete — all 4 phases executed and verified*
 
 ## Evolution
 
