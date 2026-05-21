@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Tailwind CSS v4 (CSS-first config via `@theme` in `globals.css`)
 - Stripe for payments (Okami Review checkout)
 - Cal.com v2 API for booking creation and availability
-- Beehiiv for newsletter (optional, falls back to `/tmp` storage)
+- Beehiiv for newsletter (optional; returns 503 when keys are absent)
 - Domain: okamilabs.com
 
 ## Development Commands
@@ -35,7 +35,7 @@ Copy `.env.example` to `.env.local`. Required vars:
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe client SDK (Elements) |
 | `NEXT_PUBLIC_SITE_URL` | Used for OG images, sitemap, structured data |
 
-Optional: `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID` for newsletter.
+Optional: `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID` for newsletter. When absent, the newsletter endpoint returns 503.
 
 In dev, the site boots without Stripe/Cal keys — payment endpoints return 503.
 
