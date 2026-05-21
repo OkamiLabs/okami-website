@@ -1,57 +1,58 @@
 /**
  * POST /api/chat
  *
- * Widget chat endpoint. Phase I is a **stub** — `CHATBOT_ENABLED=0` by
- * default and this handler NEVER imports `@ai-sdk/anthropic` or
- * `@ai-sdk/openai`. It returns a canned assistant reply and persists both
- * the user turn and the canned assistant turn so the admin dashboard and
- * history endpoint have data to show.
+ * Widget chat endpoint. When CHATBOT_ENABLED=1 this handler streams a live
+ * Claude response via lazy-imported @ai-sdk/anthropic. When disabled it
+ * returns a canned assistant reply so the route is always functional.
  *
  * Pipeline:
  *   1. Body size gate (content-length > 256KB → 413)
  *   2. Safe JSON parse (→ 400)
- *   3. Zod validation on body (Phase 6)
+ *   3. Zod validation (v5 UIMessage format: id, role, parts[])
  *   4. getOrCreateVisitor() — HMAC-verified, may mint a new visitor
- *   5. Visitor + IP rate-limit + spend-cap gate (Phase 8 — cheap rejects)
- *   6. If `body.conversationId` is supplied, require ownership → else 404
+ *   5. Visitor + IP rate-limit + spend-cap gate (cheap rejects before DB work)
+ *   6. If body.conversationId is supplied, require ownership → else 404
  *   7. Persist page_context on first chat per conversation
- *   8. reserveTokens(0) — Phase I stub; exercises the reservation path
- *   9. INSERT user row, INSERT canned assistant row
- *  10. reconcileTokens(reservationId, 0)
- *  11. Respond 200 JSON with `x-conversation-id` header + any Set-Cookie
+ *   8. reserveTokens(2000) — reconciled to actual in onFinish / onAbort
+ *   9. INSERT user message row (both paths)
+ *  10a. CHATBOT_ENABLED=1: lazy-import SDK, call Claude, stream response
+ *  10b. CHATBOT_ENABLED=0: insert canned reply, return JSON 200
  *
- * Phase II will add: streaming via `streamText().toUIMessageStreamResponse`,
- * tool guards, prompt sanitization, real token reservations/reconciliation.
- *
- * Phase II invariant: `@ai-sdk/*` MUST be imported lazily inside the
- * `CHATBOT_ENABLED === '1'` branch via `await import(...)` — never at the
- * top of this file. A top-level import pulls the SDK into the serverless
- * bundle unconditionally and breaks the "code absence = off" guarantee.
+ * Phase II invariant: @ai-sdk/* MUST be imported lazily inside the
+ * CHATBOT_ENABLED === '1' branch — never at the top of this file.
  */
 
 import { type NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'node:crypto';
 import { ipAddress } from '@vercel/functions';
 import { z } from 'zod';
+import { type UIMessage } from 'ai';
 import { sql } from '@/lib/db/client';
 import { getOrCreateVisitor } from '@/lib/visitor';
 import { checkChatRateLimit, opportunisticCleanup } from '@/lib/rate-limit-chat';
 import { checkSpendCap, reconcileTokens, reserveTokens } from '@/lib/spend-cap';
+import { getTools } from '@/lib/ai/tools';
+import { getSystemPrompt } from '@/lib/ai/system-prompt';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 const MAX_BODY_BYTES = 262_144; // 256KB
-const CANNED_REPLY =
-  "Hi \u2014 the chatbot is in beta. Leave a note and we'll follow up.";
 
-const messageSchema = z.object({
-  role: z.enum(['user', 'assistant', 'system', 'tool']),
-  content: z.string().max(4000),
+const uiMessagePartSchema = z.object({
+  type: z.string(),
+  text: z.string().max(4000).optional(),
+}).passthrough();
+
+const uiMessageSchema = z.object({
+  id: z.string(),
+  role: z.enum(['user', 'assistant', 'system']),
+  parts: z.array(uiMessagePartSchema).min(1),
+  metadata: z.unknown().optional(),
 });
 
 const chatBodySchema = z.object({
-  messages: z.array(messageSchema).min(1).max(50),
+  messages: z.array(uiMessageSchema).min(1).max(50),
   conversationId: z.string().uuid().optional(),
   url: z.string().url().max(2048).optional(),
   title: z.string().max(256).optional(),
@@ -102,6 +103,12 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+
+  // Extract text content from v5 UIMessage parts
+  const lastUserText = lastUser.parts
+    .filter((p) => p.type === 'text')
+    .map((p) => (p as { type: 'text'; text: string }).text)
+    .join('') ?? '';
 
   // 4. Visitor + conversation (HMAC-verified cookie).
   const { visitorId, conversationId, setCookieHeaders } = await getOrCreateVisitor();
@@ -174,29 +181,86 @@ export async function POST(request: NextRequest) {
      WHERE id = ${activeConversationId} AND page_context IS NULL
   `;
 
-  // 8. Reserve tokens (Phase I: 0 — exercises the reservation code path).
-  const reservationId = await reserveTokens(activeConversationId, 0);
+  // 8. Reserve tokens (2000 estimated — reconciled to actual in onFinish/onAbort).
+  const reservationId = await reserveTokens(activeConversationId, 2000);
 
-  // 9. Persist user + canned assistant message.
-  const userId = randomUUID();
-  const assistantId = randomUUID();
-
+  // 9. Persist user message (both paths need this before streaming starts).
   await sql`
     INSERT INTO messages (id, conversation_id, role, content)
-    VALUES (${userId}, ${activeConversationId}, 'user', ${lastUser.content})
+    VALUES (${randomUUID()}, ${activeConversationId}, 'user', ${lastUserText})
   `;
+
+  // 10. Live streaming path (CHATBOT_ENABLED=1).
+  if (process.env.CHATBOT_ENABLED === '1') {
+    // Lazy import — NEVER at top of file per D-08 / Phase II invariant.
+    const { anthropic } = await import('@ai-sdk/anthropic');
+    const { streamText, convertToModelMessages } = await import('ai');
+
+    const systemPrompt = getSystemPrompt({
+      url: parsed.data.url ?? '',
+      title: parsed.data.title ?? '',
+      meta: parsed.data.meta,
+    });
+
+    const result = streamText({
+      model: anthropic('claude-3-5-haiku-20241022'),
+      system: systemPrompt,
+      messages: convertToModelMessages(parsed.data.messages as UIMessage[]),
+      tools: getTools(visitorId, activeConversationId),
+      maxOutputTokens: 1000,
+      abortSignal: request.signal,
+      onFinish: async ({ text, totalUsage }) => {
+        const actual =
+          (totalUsage.inputTokens ?? 0) + (totalUsage.outputTokens ?? 0);
+        await reconcileTokens(reservationId, actual);
+        await sql`
+          INSERT INTO messages (id, conversation_id, role, content, token_usage)
+          VALUES (
+            ${randomUUID()},
+            ${activeConversationId},
+            'assistant',
+            ${text},
+            ${actual}
+          )
+        `;
+        await sql`
+          UPDATE conversations SET updated_at = NOW() WHERE id = ${activeConversationId}
+        `;
+      },
+      onAbort: async () => {
+        // D-05: free the reservation without charging — no assistant row written.
+        await reconcileTokens(reservationId, 0);
+      },
+    });
+
+    // Build response with cookies + conversation ID header.
+    const streamResponse = result.toUIMessageStreamResponse();
+    const finalResponse = new Response(streamResponse.body, {
+      status: streamResponse.status,
+      headers: {
+        ...Object.fromEntries(streamResponse.headers.entries()),
+        'x-conversation-id': activeConversationId,
+      },
+    });
+    for (const cookie of setCookieHeaders) {
+      finalResponse.headers.append('set-cookie', cookie);
+    }
+    return finalResponse;
+  }
+
+  // Fallback: canned reply when CHATBOT_ENABLED !== '1'.
+  // Keep this path functional — production stays on 0 through Phase 7.
+  const CANNED_REPLY =
+    "Hi — the chatbot is in beta. Leave a note and we'll follow up.";
   await sql`
-    INSERT INTO messages (id, conversation_id, role, content)
-    VALUES (${assistantId}, ${activeConversationId}, 'assistant', ${CANNED_REPLY})
+    INSERT INTO messages (id, conversation_id, role, content, token_usage)
+    VALUES (${randomUUID()}, ${activeConversationId}, 'assistant', ${CANNED_REPLY}, ${0})
   `;
   await sql`
     UPDATE conversations SET updated_at = NOW() WHERE id = ${activeConversationId}
   `;
-
-  // 10. Reconcile reservation (Phase I: 0 actual tokens consumed).
   await reconcileTokens(reservationId, 0);
 
-  // 11. Respond.
   const response = NextResponse.json(
     { role: 'assistant', content: CANNED_REPLY },
     { status: 200 }
