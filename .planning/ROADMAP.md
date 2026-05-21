@@ -38,9 +38,9 @@ Full details: `.planning/milestones/v1.0-ROADMAP.md`
   4. Tool card rendering infrastructure is in place — the widget uses message.parts (v5), not message.toolInvocations (v4)
 **Plans**: 3 plans
 Plans:
-- [ ] 05-01-PLAN.md — Remove bookDiscoveryCall, rename parameters: to inputSchema: in tools.ts, remove ToolCallDisplay from widget types
-- [ ] 05-02-PLAN.md — Replace canned-reply stub with live streamText(), update Zod schemas for v5 UIMessage format, wire token reconciliation
-- [ ] 05-03-PLAN.md — Migrate widget to v5 (DefaultChatTransport, message.parts, GenericToolCard, status-based TypingIndicator, Slate Blue theme)
+- [x] 05-01-PLAN.md — Remove bookDiscoveryCall, rename parameters: to inputSchema: in tools.ts, remove ToolCallDisplay from widget types
+- [x] 05-02-PLAN.md — Replace canned-reply stub with live streamText(), update Zod schemas for v5 UIMessage format, wire token reconciliation
+- [x] 05-03-PLAN.md — Migrate widget to v5 (DefaultChatTransport, message.parts, GenericToolCard, status-based TypingIndicator, Slate Blue theme)
 **UI hint**: yes
 
 ### Phase 6: System Prompt + Knowledge
