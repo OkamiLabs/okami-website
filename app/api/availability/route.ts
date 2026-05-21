@@ -85,9 +85,14 @@ export async function GET(req: NextRequest) {
   // v2 returns { status: "success", data: { "YYYY-MM-DD": [...] } }
   const rawSlots: Record<string, unknown> = data.data ?? data.slots ?? {};
 
-  return NextResponse.json({
-    slots: applyLeadTimeRules(rawSlots, eventTypeSlug, timeZone, new Date()),
-  });
+  return NextResponse.json(
+    { slots: applyLeadTimeRules(rawSlots, eventTypeSlug, timeZone, new Date()) },
+    {
+      headers: {
+        'Cache-Control': 'public, max-age=60, stale-while-revalidate=30',
+      },
+    }
+  );
 }
 
 /**
