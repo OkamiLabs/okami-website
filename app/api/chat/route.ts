@@ -45,13 +45,20 @@ const MAX_BODY_BYTES = 262_144; // 256KB
 const CANNED_REPLY =
   "Hi \u2014 the chatbot is in beta. Leave a note and we'll follow up.";
 
-const messageSchema = z.object({
-  role: z.enum(['user', 'assistant', 'system', 'tool']),
-  content: z.string().max(4000),
+const uiMessagePartSchema = z.object({
+  type: z.string(),
+  text: z.string().max(4000).optional(),
+}).passthrough();
+
+const uiMessageSchema = z.object({
+  id: z.string(),
+  role: z.enum(['user', 'assistant', 'system']),
+  parts: z.array(uiMessagePartSchema).min(1),
+  metadata: z.unknown().optional(),
 });
 
 const chatBodySchema = z.object({
-  messages: z.array(messageSchema).min(1).max(50),
+  messages: z.array(uiMessageSchema).min(1).max(50),
   conversationId: z.string().uuid().optional(),
   url: z.string().url().max(2048).optional(),
   title: z.string().max(256).optional(),
@@ -102,6 +109,12 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+
+  // Extract text content from v5 UIMessage parts
+  const lastUserText = lastUser.parts
+    .filter((p) => p.type === 'text')
+    .map((p) => (p as { type: 'text'; text: string }).text)
+    .join('') ?? '';
 
   // 4. Visitor + conversation (HMAC-verified cookie).
   const { visitorId, conversationId, setCookieHeaders } = await getOrCreateVisitor();
@@ -183,7 +196,7 @@ export async function POST(request: NextRequest) {
 
   await sql`
     INSERT INTO messages (id, conversation_id, role, content)
-    VALUES (${userId}, ${activeConversationId}, 'user', ${lastUser.content})
+    VALUES (${userId}, ${activeConversationId}, 'user', ${lastUserText})
   `;
   await sql`
     INSERT INTO messages (id, conversation_id, role, content)
