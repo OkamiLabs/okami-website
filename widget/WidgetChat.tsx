@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import type { WidgetConfig } from './types/widget';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
@@ -57,34 +58,43 @@ const CloseIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 export const WidgetChat: React.FC<WidgetChatProps> = ({ config, isOpen, onClose }) => {
   const [conversationId, setConversationId] = useState<string | undefined>();
+  const [input, setInput] = useState('');
 
-  const {
-    messages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    isLoading,
-    error,
-  } = useChat({
-    api: '/api/chat',
-    body: {
-      ...getPageContext(),
-      ...(conversationId ? { conversationId } : {}),
-    },
-    onResponse(response) {
-      // Capture the conversation ID from the first response header
-      const id = response.headers.get('x-conversation-id');
-      if (id && !conversationId) {
-        setConversationId(id);
-      }
-    },
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/chat',
+      // Custom fetch wrapper: captures conversation ID from response headers.
+      // This is the v5 replacement for the removed v4 callback (D-09 / Gotcha 3).
+      fetch: async (url, init) => {
+        const response = await globalThis.fetch(url, init);
+        const id = response.headers.get('x-conversation-id');
+        if (id) setConversationId(id);
+        return response;
+      },
+    }),
   });
+
+  // Build submit handler — captures conversationId at call time (not at hook init).
+  // This fixes the staleness bug where message 2+ would use an empty conversationId.
+  const handleFormSubmit = useCallback(() => {
+    if (!input.trim()) return;
+    sendMessage(
+      { text: input },
+      {
+        body: {
+          ...getPageContext(),
+          ...(conversationId ? { conversationId } : {}),
+        },
+      },
+    );
+    setInput('');
+  }, [input, sendMessage, conversationId]);
 
   const onInputChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-      handleInputChange(event);
+      setInput(event.target.value);
     },
-    [handleInputChange],
+    [],
   );
 
   if (!isOpen) return null;
@@ -119,7 +129,7 @@ export const WidgetChat: React.FC<WidgetChatProps> = ({ config, isOpen, onClose 
       </div>
 
       {/* Error banner */}
-      {error && (
+      {status === 'error' && (
         <div className="widget-error" role="alert">
           Something went wrong. Please try again.
         </div>
@@ -128,7 +138,7 @@ export const WidgetChat: React.FC<WidgetChatProps> = ({ config, isOpen, onClose 
       {/* Messages */}
       <MessageList
         messages={messages}
-        isLoading={isLoading}
+        status={status}
         config={config}
       />
 
@@ -136,7 +146,7 @@ export const WidgetChat: React.FC<WidgetChatProps> = ({ config, isOpen, onClose 
       <MessageInput
         placeholderText={config.placeholderText}
         maxMessageLength={config.maxMessageLength}
-        onSubmit={handleSubmit}
+        onSubmit={handleFormSubmit}
         input={input}
         onInputChange={onInputChange}
       />
