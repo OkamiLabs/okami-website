@@ -9,7 +9,7 @@
 - [ ] **Phase 1: Revenue Protection** - Sentry installed, BOOKING_FAILED_POST_CHARGE alerted, payment rate limits are instance-safe
 - [ ] **Phase 2: Infrastructure & Security** - Migration path corrected, token table cleaned, timing leak fixed, CSP gap documented
 - [ ] **Phase 3: AI Scaffolding Cleanup** - Dead imports fixed, domain corrected, seed data matches live offerings
-- [ ] **Phase 4: Tests & Hygiene** - Booking-flow unit tests written, cache headers set, admin query bounded, packages pinned, CLAUDE.md accurate
+- [x] **Phase 4: Tests & Hygiene** - Booking-flow unit tests written, cache headers set, admin query bounded, packages pinned, CLAUDE.md accurate (completed 2026-05-21)
 
 ## Phase Details
 
@@ -69,7 +69,11 @@ Plans:
 2. A browser dev-tools network trace of the booking flow shows /api/availability responses carrying `Cache-Control: public, max-age=60, stale-while-revalidate=30` — a second request within 60 seconds is served from cache.
 3. The admin conversations query includes a LIMIT clause on the messages sub-query; loading the admin page with a large conversation history does not fetch unbounded rows.
 4. package.json pins @ai-sdk/anthropic and ai to exact versions (no ^ or ~ prefix), and CLAUDE.md describes the newsletter 503 behavior without mentioning a /tmp fallback.
-**Plans:** TBD
+**Plans:** 2/2 plans complete
+
+Plans:
+- [x] 04-01-PLAN.md — Fix CLAUDE.md newsletter 503 description, add Cache-Control on /api/availability, and LIMIT 100 on admin messages sub-query (HYG-01 + HYG-02 + HYG-03)
+- [x] 04-02-PLAN.md — Set up Vitest, write booking-flow reconcile unit tests, and pin AI SDK versions (TEST-01 + HYG-04)
 **UI hint**: no
 
 ## Progress
@@ -79,7 +83,7 @@ Plans:
 | 1. Revenue Protection | 0/3 | Not started | - |
 | 2. Infrastructure & Security | 0/2 | Not started | - |
 | 3. AI Scaffolding Cleanup | 0/? | Not started | - |
-| 4. Tests & Hygiene | 0/? | Not started | - |
+| 4. Tests & Hygiene | 2/2 | Complete   | 2026-05-21 |
 
 ## Requirement Traceability
 
