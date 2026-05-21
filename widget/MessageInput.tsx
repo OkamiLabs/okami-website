@@ -1,9 +1,9 @@
-import { useState, useRef, useCallback, useEffect, FormEvent } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 interface MessageInputProps {
   placeholderText: string;
   maxMessageLength: number;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onSubmit: () => void;
   input: string;
   onInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   disabled?: boolean;
@@ -63,7 +63,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   }, [maxMessageLength, onInputChange]);
 
   // Handle form submission
-  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmedMessage = input.trim();
@@ -74,7 +74,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     setIsSending(true);
 
     try {
-      onSubmit(event);
+      onSubmit();
 
       // Reset textarea height
       if (textareaRef.current) {

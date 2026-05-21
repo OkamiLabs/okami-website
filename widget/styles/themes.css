@@ -89,9 +89,9 @@
 
 /* Brand Specific Themes */
 [data-widget-theme="okami"] {
-  --widget-primary-color: #7c3aed;
-  --widget-primary-hover: #6d28d9;
-  --widget-primary-light: #ede9fe;
+  --widget-primary-color: #6878A0;
+  --widget-primary-hover: #576690;
+  --widget-primary-light: rgba(104, 120, 160, 0.12);
   --widget-background-color: #ffffff;
   --widget-surface-color: #faf5ff;
   --widget-text-color: #1f2937;
