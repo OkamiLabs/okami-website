@@ -1,12 +1,22 @@
-# Okami Labs Website — Codebase Health
+# Okami Labs Website — AI Chatbot
 
 ## What This Is
 
-A codebase hardening milestone for the live okamilabs.com site. The site already works — booking flow, chat widget, and payment processing are all shipping. This project addresses known concerns from the codebase audit: broken AI scaffolding, unprotected payment failure paths, missing observability, infrastructure rough edges, and zero test coverage on the payment flow.
+The okamilabs.com website — a credibility anchor, booking funnel, and live product demo. Visitors understand what Okami is, can book a consultation through a multi-step Stripe + Cal.com flow, and can experience Okami's AI capability firsthand through a Claude-powered chat assistant that guides them from question to booked call.
 
 ## Core Value
 
-No payment is lost silently — every Stripe charge that fails to produce a Cal.com booking is immediately visible and actionable.
+The chatbot converts visitors and convinces them Okami can build AI for them — by being an excellent AI product itself.
+
+## Current Milestone: v2.0 AI Chatbot
+
+**Goal:** Replace the canned-reply widget with a Claude-powered chatbot that handles the full booking journey and demonstrates what Okami builds.
+
+**Target features:**
+- Live Claude AI in the chat widget (replace canned reply)
+- Knowledge-rich system prompt — services + pricing, founder story, booking logistics, Labs/Agent Core
+- AI tools for booking flow: slot availability (Cal.com), intake collection, Stripe Payment Link generation
+- Free-form conversation with guided structure for the booking journey
 
 ## Requirements
 
@@ -21,69 +31,59 @@ No payment is lost silently — every Stripe charge that fails to produce a Cal.
 - ✓ HMAC visitor identity cookie — live
 - ✓ Spend cap enforcement — live
 - ✓ Security headers (CSP, HSTS, X-Frame-Options) — live
+- ✓ Sentry installed, BOOKING_FAILED_POST_CHARGE alerted — Phase 01
+- ✓ Neon-backed rate limiter on /api/book and /api/payment-intent — Phase 01
+- ✓ Migration path corrected, token table cleanup, timing leak fixed — Phase 02
+- ✓ CSP gap documented — Phase 02
+- ✓ lib/ai/tools.ts and system-prompt.ts fixed, domain corrected, seed data updated — Phase 03
+- ✓ Booking-flow unit tests, cache headers, admin query bounded, packages pinned — Phase 04
 
 ### Active
 
-**AI Scaffolding (Section 1 — pre-chatbot)**
-- ✓ Fix lib/ai/tools.ts broken imports and db.query → sql tagged template — Validated in Phase 03: ai-scaffolding-cleanup
-- ✓ Fix lib/ai/system-prompt.ts domain — okami.com → okamilabs.com — Validated in Phase 03: ai-scaffolding-cleanup
-- ✓ Update db/migrations/002_seed_services.sql — Okami Review $299, Discovery Call Free — Validated in Phase 03: ai-scaffolding-cleanup
-
-**Observability**
-- ✓ Install @sentry/nextjs and configure DSN — Validated in Phase 01: revenue-protection
-- ✓ Capture exceptions at both BOOKING_FAILED_POST_CHARGE sites (api/book, lib/booking-flow.ts) — Validated in Phase 01: revenue-protection
-- ✓ Forward widget errors from /api/widget-errors to Sentry — Validated in Phase 01: revenue-protection
-
-**Payment Route Hardening**
-- ✓ Swap in-memory rate limiter on /api/book and /api/payment-intent to Neon-backed lib/rate-limit-chat.ts — Validated in Phase 01: revenue-protection
-
-**Database & Infrastructure**
-- ✓ Move lib/migrations/001_partial_bookings.sql to db/migrations/004_partial_bookings.sql — Validated in Phase 02: infrastructure-security
-- ✓ Add reconciled-row cleanup to token_reservations in lib/rate-limit-chat.ts — Validated in Phase 02: infrastructure-security
-
-**Security**
-- ✓ Fix constant-time comparison length leak in proxy.ts (timingSafeEqual over padded buffers) — Validated in Phase 02: infrastructure-security
-- ✓ Document CSP frame-ancestors override (admin is basic-auth protected — note the gap clearly) — Validated in Phase 02: infrastructure-security
-
-**Code Hygiene**
-- ✓ Update CLAUDE.md to accurately describe newsletter 503 behavior (remove /tmp fallback claim) — Validated in Phase 04: tests-hygiene
-- ✓ Add Cache-Control: public, max-age=60, stale-while-revalidate=30 on /api/availability response — Validated in Phase 04: tests-hygiene
-- ✓ Add LIMIT on admin conversations message sub-query in app/admin/conversations/route.ts — Validated in Phase 04: tests-hygiene
-- ✓ Pin @ai-sdk/anthropic and ai to exact versions in package.json — Validated in Phase 04: tests-hygiene
-
-**Tests — Critical Path**
-- ✓ Unit tests for lib/booking-flow.ts: reconcileBookingFromIntent happy path, BOOKING_FAILED_POST_CHARGE path, ReconcileError codes — Validated in Phase 04: tests-hygiene
+**AI Chatbot**
+- [ ] Enable live Claude AI behind CHATBOT_ENABLED in app/api/chat/route.ts
+- [ ] System prompt covers: services + pricing, founder story, booking logistics, Labs/Agent Core
+- [ ] Chatbot can surface Cal.com slot availability via tool call
+- [ ] Chatbot guides visitor through service selection and intake collection in conversation
+- [ ] Chatbot generates Stripe Payment Link and presents it when visitor is ready to book
+- [ ] Conversation is free-form with guided structure for the booking journey
+- [ ] Widget UI handles guided booking steps (slot display, confirmation, payment link CTA)
+- [ ] Chatbot is polished and impressive — it is the product demo
 
 ### Out of Scope
 
-- Chatbot Phase II (CHATBOT_ENABLED implementation) — separate project
 - Booking retry queue (Vercel Cron + pending_bookings table) — significant infrastructure, deferred
-- Full test coverage for widget pipeline and admin auth — deferred; critical path tests are the priority
-- x-forwarded-for proxy trust list — Vercel sets this correctly in production, mitigation is adequate
+- Full test coverage for widget pipeline and admin auth — deferred; critical path tests sufficient
+- x-forwarded-for proxy trust list — Vercel sets this correctly in production
+- Inline Stripe Elements in chat — Payment Link popup chosen for simplicity
+- Full booking creation inside chat (payment reconciliation stays with existing /api/book flow)
 
 ## Context
 
-The codebase audit (2026-05-18) produced CONCERNS.md with 8 sections ordered by impact on the Phase II chatbot. This project works through concerns 1–3 and 5–8 (everything before the chatbot stub item). The chatbot concern (#4 in Section 1) is a separate project.
+The codebase hardening (v1.0) is complete. The site processes real payments through the /book flow. The widget UI, AI scaffolding (lib/ai/tools.ts, lib/ai/system-prompt.ts), and chat API route (app/api/chat/route.ts) are all in place from Phase 03. The chatbot work is enabling and building on top of this scaffolding.
 
-The booking flow is live and processing real payments. The BOOKING_FAILED_POST_CHARGE path (Stripe charged, Cal.com failed) currently sends no alert — it only logs to console.error. Sentry is the top priority because it protects revenue that's already flowing.
+The chatbot's quality bar is higher than a typical feature — it is both a conversion tool and a live demonstration of what Okami sells. A mediocre chatbot undermines the pitch.
 
 ## Constraints
 
-- **Stack**: Next.js App Router on Vercel — no new runtime dependencies beyond @sentry/nextjs and a test runner
-- **No auth changes**: Admin auth (proxy.ts) changes must be minimal — only fix the timing leak, don't restructure
-- **Preserve widget build isolation**: widget/ compiles separately via Vite; don't add imports between widget/ and app/
-- **No chatbot work**: Any AI SDK enablement is explicitly deferred
+- **Stack**: Next.js App Router on Vercel — widget compiles separately via Vite; don't add imports between widget/ and app/
+- **Widget build isolation**: widget/ compiles separately via Vite — no shared imports with app/
+- **Payment**: Stripe Payment Link for chat (not inline Elements) — visitor exits to payment, returns to confirmation
+- **No auth changes**: Admin auth (proxy.ts) is settled — don't touch it
+- **AI model**: Claude via Anthropic SDK — already scaffolded
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Install Sentry (not just Slack webhook) | Proper exception capture beats one-off webhooks; Sentry DSN vars were already reserved in .env.example | Validated Phase 01 |
-| Critical-path tests only | Full booking + widget coverage is significant work; the payment-failure path is the highest risk surface | Validated Phase 04 — 6 unit tests covering all reconcile paths |
-| Neon-backed rate limiter for payment routes | lib/rate-limit-chat.ts already exists and works; reuse over introducing a new solution | Validated Phase 01 |
+| Install Sentry (not just Slack webhook) | Proper exception capture beats one-off webhooks; DSN vars already reserved | ✓ Validated Phase 01 |
+| Critical-path tests only (v1.0) | Full booking + widget coverage deferred; payment-failure path is highest risk | ✓ Validated Phase 04 |
+| Neon-backed rate limiter for payment routes | lib/rate-limit-chat.ts already existed; reuse over new solution | ✓ Validated Phase 01 |
+| Payment Link (not inline Stripe Elements) in chat | Simpler implementation; avoids PCI scope in widget iframe | — Pending |
+| Free-form AI + guided flow (not purely scripted) | Matches Okami's sophistication; pure scripts feel cheap given the demo context | — Pending |
 
 ---
-*Last updated: 2026-05-21 — Milestone v1.0 complete — all 4 phases executed and verified*
+*Last updated: 2026-05-20 — Milestone v2.0 AI Chatbot started*
 
 ## Evolution
 

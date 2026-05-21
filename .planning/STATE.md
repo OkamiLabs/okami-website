@@ -1,52 +1,41 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: milestone_complete
-last_updated: "2026-05-21T00:04:49.892Z"
+milestone: v2.0
+milestone_name: AI Chatbot
+status: planning
+last_updated: "2026-05-20T00:00:00.000Z"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 9
-  completed_plans: 7
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
-# State — Okami Labs Website: Codebase Health
+# State — Okami Labs Website: AI Chatbot
 
 ## Project Reference
 
-**Core value:** No payment is lost silently — every Stripe charge that fails to produce a Cal.com booking is immediately visible and actionable.
+**Core value:** The chatbot converts visitors and convinces them Okami can build AI for them — by being an excellent AI product itself.
 
-**Milestone:** Codebase hardening (pre-Phase II chatbot)
+**Milestone:** v2.0 AI Chatbot
 
-**Total requirements:** 15 across 4 phases
+**Total requirements:** TBD — defined during roadmap
 
 ---
 
 ## Current Position
 
-Phase: 4 (Tests & Hygiene) — EXECUTING
-Plan: 1 of 2
-**Phase:** 4
-**Plan:** Not started
-**Status:** Milestone complete
-
-```
-Progress: [ ] Phase 1  [ ] Phase 2  [ ] Phase 3  [ ] Phase 4
-          0 of 4 phases complete
-```
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-20 — Milestone v2.0 started
 
 ---
 
 ## Phase Status
 
-| Phase | Name | Requirements | Status | Completed |
-|-------|------|--------------|--------|-----------|
-| 1 | Revenue Protection | OBS-01, OBS-02, OBS-03, PAY-01 | Not started | - |
-| 2 | Infrastructure & Security | INF-01, INF-02, SEC-01, SEC-02 | Not started | - |
-| 3 | AI Scaffolding Cleanup | AI-01, AI-02, AI-03 | Not started | - |
-| 4 | Tests & Hygiene | TEST-01, HYG-01, HYG-02, HYG-03, HYG-04 | Not started | - |
+TBD — roadmap not yet created
 
 ---
 
@@ -55,26 +44,28 @@ Progress: [ ] Phase 1  [ ] Phase 2  [ ] Phase 3  [ ] Phase 4
 ### Key Decisions
 
 - Sentry chosen over Slack webhook: DSN vars already reserved in .env.example; proper exception capture beats one-off webhooks
-- Critical-path tests only: payment-failure path is highest risk surface; full widget/admin coverage deferred
+- Critical-path tests only (v1.0): payment-failure path is highest risk surface; full widget/admin coverage deferred
 - Neon-backed rate limiter for payment routes: lib/rate-limit-chat.ts already exists and works; reuse over new solution
+- Payment Link (not inline Stripe Elements) for chat booking: simpler; avoids PCI scope in widget
 
 ### Constraints Active
 
-- No new runtime dependencies beyond @sentry/nextjs and a test runner
-- No auth changes beyond the minimal timing-leak fix in proxy.ts
 - Widget build isolation must be preserved (widget/ compiles separately via Vite)
-- No chatbot work (CHATBOT_ENABLED enablement is explicitly deferred)
+- No auth changes (proxy.ts is settled)
+- AI model: Claude via Anthropic SDK (already scaffolded)
 
 ### Architecture Notes
 
-- In-memory rate limiter (lib/rate-limit.ts) is safe for non-payment routes; only /api/book and /api/payment-intent need migration to Neon-backed
-- lib/ai/tools.ts is not imported anywhere in the active codebase — changes are safe with no live risk
-- Two migration directories exist: db/migrations/ (Neon, runs via npm run migrate) and lib/migrations/ (Supabase, manual only)
-- BOOKING_FAILED_POST_CHARGE log sites: app/api/book/route.ts line 268 and lib/booking-flow.ts line 141
+- CHATBOT_ENABLED flag lives in app/api/chat/route.ts — currently returns canned reply when disabled
+- AI scaffolding: lib/ai/tools.ts and lib/ai/system-prompt.ts are in place (fixed Phase 03)
+- Widget UI: widget/ directory with WidgetChat.tsx, MessageList.tsx, MessageInput.tsx etc.
+- Existing Cal.com API at /api/availability (Cal.com v2 slots)
+- Stripe Payment Link creation: needs new API route or tool
+- Two migration directories: db/migrations/ (Neon, active) and lib/migrations/ (Supabase, manual)
 
 ### Todos
 
-- None yet
+- None
 
 ### Blockers
 
@@ -82,7 +73,17 @@ Progress: [ ] Phase 1  [ ] Phase 2  [ ] Phase 3  [ ] Phase 4
 
 ---
 
+## Deferred Items
+
+Items carried forward from v1.0:
+
+| Category | Item | Status |
+|----------|------|--------|
+| verification_gap | Phase 01: Sentry live-env delivery tests (BOOKING_FAILED_POST_CHARGE, widget errors, cross-instance rate limit) | Deferred — requires SENTRY_DSN in Vercel |
+
+---
+
 ## Session Continuity
 
-**Last updated:** 2026-05-18 — Roadmap initialized
-**Next action:** Begin Phase 1 planning with `/gsd-plan-phase 1`
+**Last updated:** 2026-05-20 — Milestone v2.0 started
+**Next action:** `/gsd-plan-phase 5` after roadmap is created
