@@ -75,13 +75,22 @@ export async function GET(req: NextRequest) {
     timeZone,
   });
 
-  const slotsRes = await fetch(`${CAL_V2_BASE}/slots?${params}`, {
-    headers: {
-      Authorization: `Bearer ${CAL_API_KEY}`,
-      'cal-api-version': CAL_API_VERSION,
-    },
-    next: { revalidate: 60 }, // cache 1 minute — slots change frequently
-  });
+  let slotsRes: Response;
+  try {
+    slotsRes = await fetch(`${CAL_V2_BASE}/slots?${params}`, {
+      headers: {
+        Authorization: `Bearer ${CAL_API_KEY}`,
+        'cal-api-version': CAL_API_VERSION,
+      },
+      next: { revalidate: 60 }, // cache 1 minute — slots change frequently
+    });
+  } catch (err) {
+    console.error('Cal.com fetch failed (network):', err);
+    return NextResponse.json(
+      { error: 'Failed to reach availability service' },
+      { status: 502 }
+    );
+  }
 
   if (!slotsRes.ok) {
     const errText = await slotsRes.text().catch(() => '');
