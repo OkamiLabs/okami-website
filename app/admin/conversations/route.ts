@@ -246,6 +246,14 @@ export async function GET(request: Request) {
       },
     });
   }
-  return renderDashboard(request);
+  try {
+    return await renderDashboard(request);
+  } catch (err) {
+    console.error('[admin/conversations] DB error:', err);
+    return new Response('Internal Server Error', {
+      status: 500,
+      headers: SECURITY_HEADERS,
+    });
+  }
 }
 
