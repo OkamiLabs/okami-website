@@ -17,6 +17,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { getClientIp } from '@/lib/rate-limit';
+import { checkChatRateLimit } from '@/lib/rate-limit-chat';
 
 const CAL_API_KEY = process.env.CAL_API_KEY || '';
 const CAL_V2_BASE = 'https://api.cal.com/v2';
@@ -40,6 +42,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       { error: 'Missing required params: calLink, start, end' },
       { status: 400 }
+    );
+  }
+
+  const ip = getClientIp(req.headers);
+  const rl = await checkChatRateLimit('ip', ip, { max: 30, windowSec: 60 });
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter ?? 60) } }
     );
   }
 
