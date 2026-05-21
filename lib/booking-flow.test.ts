@@ -5,11 +5,17 @@ import type Stripe from 'stripe';
 // Module-level mocks — Vitest hoists these above imports automatically
 // ---------------------------------------------------------------------------
 
+// Mutable reference — tests can swap stripeInstance to simulate null/misconfigured
+let stripeInstance: object | null = {
+  paymentIntents: {
+    update: vi.fn().mockResolvedValue({}),
+  },
+};
+
 vi.mock('./stripe', () => ({
-  stripe: {
-    paymentIntents: {
-      update: vi.fn().mockResolvedValue({}),
-    },
+  // getter lets tests swap stripeInstance without re-importing the module
+  get stripe() {
+    return stripeInstance;
   },
   // toRef is a pure function — inline the real implementation so tests don't
   // depend on a network call or the env var guard in lib/stripe.ts
@@ -147,41 +153,13 @@ describe('reconcileBookingFromIntent', () => {
   // -------------------------------------------------------------------------
   describe('ReconcileError codes', () => {
     it('not_configured — throws when stripe is null', async () => {
-      // Override the stripe module so that stripe is null for this test
-      vi.resetModules();
-      vi.doMock('./stripe', () => ({
-        stripe: null,
-        toRef: (id: string, serviceId: 'review' | 'discovery') => {
-          const prefix = serviceId === 'review' ? 'OR' : 'DC';
-          const cleaned = id.replace(/[^a-zA-Z0-9]/g, '');
-          const tail = cleaned.slice(-6).toUpperCase();
-          return `${prefix}-${tail}`;
-        },
-      }));
-
-      const { reconcileBookingFromIntent: reconcile } = await import('./booking-flow');
-
+      stripeInstance = null;
       const pi = makeSucceededPI();
-      await expect(reconcile(pi)).rejects.toMatchObject({
+      await expect(reconcileBookingFromIntent(pi)).rejects.toMatchObject({
         name: 'ReconcileError',
         code: 'not_configured',
       });
-
-      // Restore the original mock for subsequent tests
-      vi.resetModules();
-      vi.doMock('./stripe', () => ({
-        stripe: {
-          paymentIntents: {
-            update: vi.fn().mockResolvedValue({}),
-          },
-        },
-        toRef: (id: string, serviceId: 'review' | 'discovery') => {
-          const prefix = serviceId === 'review' ? 'OR' : 'DC';
-          const cleaned = id.replace(/[^a-zA-Z0-9]/g, '');
-          const tail = cleaned.slice(-6).toUpperCase();
-          return `${prefix}-${tail}`;
-        },
-      }));
+      stripeInstance = { paymentIntents: { update: vi.fn().mockResolvedValue({}) } };
     });
 
     it('payment_not_succeeded — throws when PI status is not succeeded', async () => {
