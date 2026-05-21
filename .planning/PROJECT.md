@@ -83,7 +83,7 @@ The chatbot's quality bar is higher than a typical feature — it is both a conv
 | Free-form AI + guided flow (not purely scripted) | Matches Okami's sophistication; pure scripts feel cheap given the demo context | — Pending |
 
 ---
-*Last updated: 2026-05-20 — Milestone v2.0 AI Chatbot started*
+*Last updated: 2026-05-21 — Phase 5 complete: live Claude streaming wired, AI SDK v5 migration done, all UAT passed*
 
 ## Evolution
 
