@@ -36,37 +36,20 @@ export interface WidgetConfig {
 }
 
 // ---------------------------------------------------------------------------
-// Theme presets
-// ---------------------------------------------------------------------------
-
-export const LIGHT_THEME: WidgetTheme = {
-  mode: 'light',
-  primaryColor: '#7c3aed',
-  backgroundColor: '#ffffff',
-  textColor: '#1f2937',
-  borderRadius: '8px',
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-};
-
-export const DARK_THEME: WidgetTheme = {
-  mode: 'dark',
-  primaryColor: '#8b5cf6',
-  backgroundColor: '#1f2937',
-  textColor: '#f9fafb',
-  borderRadius: '8px',
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-};
-
-// ---------------------------------------------------------------------------
 // Default configuration
 // ---------------------------------------------------------------------------
 
 export const DEFAULT_CONFIG: WidgetConfig = {
-  theme: LIGHT_THEME,
+  theme: {
+    mode: 'dark',
+    primaryColor: '#6878A0',
+    backgroundColor: 'rgba(15, 15, 15, 0.95)',
+    textColor: '#e8e6e1',
+    borderRadius: '16px',
+    fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
+  },
   companyName: 'Okami',
-  welcomeMessage: 'Hey! How can we help you today?',
+  welcomeMessage: 'What can I help you with?',
   placeholderText: 'Ask me anything...',
   maxMessageLength: 1000,
   position: 'bottom-right',
