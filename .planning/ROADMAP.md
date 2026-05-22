@@ -55,8 +55,8 @@ Plans:
   5. A visitor asking an off-topic or adversarial question (e.g., "write me a poem") is redirected gracefully without breaking character, and a visitor expressing any booking intent is directed to /book
 **Plans**: 2 plans
 Plans:
-- [ ] 06-01-PLAN.md — Draft knowledge-complete system prompt from website sources; present for user review (D-04 approval gate)
-- [ ] 06-02-PLAN.md — Write approved prompt into system-prompt.ts, remove lookupService from tools.ts, commit
+- [x] 06-01-PLAN.md — Draft knowledge-complete system prompt from website sources; present for user review (D-04 approval gate)
+- [x] 06-02-PLAN.md — Write approved prompt into system-prompt.ts, remove lookupService from tools.ts, commit
 **UI hint**: no
 
 ### Phase 7: QA & Launch Prep
