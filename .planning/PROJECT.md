@@ -83,7 +83,7 @@ The chatbot's quality bar is higher than a typical feature — it is both a conv
 | Free-form AI + guided flow (not purely scripted) | Matches Okami's sophistication; pure scripts feel cheap given the demo context | — Pending |
 
 ---
-*Last updated: 2026-05-21 — Phase 5 complete: live Claude streaming wired, AI SDK v5 migration done, all UAT passed*
+*Last updated: 2026-05-22 — Phase 6 complete: knowledge-complete system prompt live, lookupService removed, Discovery Call replaced by chatbot qualification flow, maintainable constants-based structure adopted*
 
 ## Evolution
 
