@@ -96,6 +96,7 @@ export default function RootLayout({
         <Footer />
         <Analytics />
         <SpeedInsights />
+        <script src="/widget.js" />
       </body>
     </html>
   );
