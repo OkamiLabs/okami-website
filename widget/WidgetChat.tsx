@@ -53,6 +53,36 @@ const CloseIcon: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 // ---------------------------------------------------------------------------
+// Error message helper
+// ---------------------------------------------------------------------------
+
+/**
+ * Derive a typed error message from the useChat error object.
+ *
+ * HttpChatTransport throws new Error(await response.text()) when the HTTP
+ * response is not OK. The raw JSON string from /api/chat becomes error.message.
+ * Parse it to read the `error` field — 'rate_limit' or 'capacity'.
+ *
+ * NOTE: both rate_limit and capacity arrive as HTTP 429. Differentiate via the
+ * JSON body field, NOT the HTTP status code.
+ */
+function getErrorMessage(error: Error | undefined): string {
+  if (!error) return '';
+  try {
+    const parsed = JSON.parse(error.message) as { error?: string };
+    if (parsed.error === 'rate_limit') {
+      return "You've sent a lot of messages — give it a moment and try again.";
+    }
+    if (parsed.error === 'capacity') {
+      return "We've hit our AI usage limit for now. Try again a bit later.";
+    }
+  } catch {
+    // error.message is not JSON (network error, DNS failure, etc.) — fall through
+  }
+  return 'Something went wrong on our end. Try again in a moment.';
+}
+
+// ---------------------------------------------------------------------------
 // WidgetChat
 // ---------------------------------------------------------------------------
 
@@ -60,7 +90,7 @@ export const WidgetChat: React.FC<WidgetChatProps> = ({ config, isOpen, onClose 
   const [conversationId, setConversationId] = useState<string | undefined>();
   const [input, setInput] = useState('');
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, error } = useChat({
     transport: new DefaultChatTransport({
       api: '/api/chat',
       // Custom fetch wrapper: captures conversation ID from response headers.
@@ -131,7 +161,7 @@ export const WidgetChat: React.FC<WidgetChatProps> = ({ config, isOpen, onClose 
       {/* Error banner */}
       {status === 'error' && (
         <div className="widget-error" role="alert">
-          Something went wrong. Please try again.
+          {getErrorMessage(error)}
         </div>
       )}
 
