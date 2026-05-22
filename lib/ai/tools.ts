@@ -8,10 +8,10 @@ export function getTools(visitorId: string, conversationId: string) {
     captureLeadInfo: tool({
       description: 'Capture contact information when a visitor shares it. Use for names, emails, phone numbers, or service interests.',
       inputSchema: z.object({
-        name: z.string().optional().describe('Visitor name'),
-        email: z.string().optional().describe('Visitor email'),
-        phone: z.string().optional().describe('Visitor phone number'),
-        serviceInterest: z.string().optional().describe('What service they are interested in'),
+        name: z.string().max(200).optional().describe('Visitor name'),
+        email: z.string().max(254).optional().describe('Visitor email'),
+        phone: z.string().max(30).optional().describe('Visitor phone number'),
+        serviceInterest: z.string().max(500).optional().describe('What service they are interested in'),
       }),
       execute: async ({ name, email, phone, serviceInterest }) => {
         // Validate email format if provided
