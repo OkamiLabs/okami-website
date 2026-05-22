@@ -196,11 +196,11 @@ export async function POST(request: NextRequest) {
     const { anthropic } = await import('@ai-sdk/anthropic');
     const { streamText, convertToModelMessages } = await import('ai');
 
-    const systemPrompt = getSystemPrompt({
-      url: parsed.data.url ?? '',
-      title: parsed.data.title ?? '',
-      meta: parsed.data.meta,
-    });
+    const systemPrompt = getSystemPrompt(
+      parsed.data.url && parsed.data.title
+        ? { url: parsed.data.url, title: parsed.data.title, meta: parsed.data.meta }
+        : undefined
+    );
 
     const result = streamText({
       model: anthropic(process.env.AI_MODEL ?? 'claude-haiku-4-5'),
