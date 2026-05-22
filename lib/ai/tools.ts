@@ -14,6 +14,11 @@ export function getTools(visitorId: string, conversationId: string) {
         serviceInterest: z.string().max(500).optional().describe('What service they are interested in'),
       }),
       execute: async ({ name, email, phone, serviceInterest }) => {
+        // Require at least one field — reject fully-empty calls
+        if (!name && !email && !phone && !serviceInterest) {
+          return 'Got it — could you share your name or email so we can follow up?';
+        }
+
         // Validate email format if provided
         if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           return 'The email address provided does not appear to be valid. Could you double-check it?';
