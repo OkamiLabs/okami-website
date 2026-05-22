@@ -15,9 +15,16 @@ const nextConfig: NextConfig = {
 
   async headers() {
     const isDev = process.env.NODE_ENV !== 'production';
+    const isPreview = process.env.VERCEL_ENV === 'preview';
     const scriptSrc = isDev
       ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://va.vercel-scripts.com"
+      : isPreview
+      ? "script-src 'self' 'unsafe-inline' https://js.stripe.com https://va.vercel-scripts.com https://vercel.live"
       : "script-src 'self' 'unsafe-inline' https://js.stripe.com https://va.vercel-scripts.com";
+
+    const connectSrc = isPreview
+      ? "connect-src 'self' https://api.stripe.com https://api.beehiiv.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://o*.ingest.sentry.io https://vercel.live wss://ws-us3.pusher.com https://sockjs-us3.pusher.com"
+      : "connect-src 'self' https://api.stripe.com https://api.beehiiv.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://o*.ingest.sentry.io";
 
     return [
       {
@@ -38,7 +45,8 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: https:",
               "font-src 'self' https://fonts.gstatic.com",
               "frame-src https://js.stripe.com https://hooks.stripe.com",
-              "connect-src 'self' https://api.stripe.com https://api.beehiiv.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://o*.ingest.sentry.io",
+              connectSrc,
+              "worker-src 'self' blob:",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

@@ -98,6 +98,44 @@ const StreamingCursor: React.FC = () => (
 );
 
 // ---------------------------------------------------------------------------
+// Link-aware text renderer
+// ---------------------------------------------------------------------------
+
+function renderTextWithLinks(text: string): React.ReactNode {
+  const nodes: React.ReactNode[] = [];
+  let last = 0;
+  let match: RegExpExecArray | null;
+  const re = /(https?:\/\/[^\s<>"]+|okamilabs\.com\/[^\s<>"]*)/g;
+  while ((match = re.exec(text)) !== null) {
+    if (match.index > last) {
+      nodes.push(text.slice(last, match.index));
+    }
+    const raw = match[0];
+    const href = raw.startsWith('http') ? raw : `https://${raw}`;
+    nodes.push(
+      <a
+        key={match.index}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          color: 'var(--widget-primary-color)',
+          textDecoration: 'underline',
+          wordBreak: 'break-all',
+        }}
+      >
+        {raw}
+      </a>
+    );
+    last = match.index + raw.length;
+  }
+  if (last < text.length) {
+    nodes.push(text.slice(last));
+  }
+  return <>{nodes}</>;
+}
+
+// ---------------------------------------------------------------------------
 // Single message bubble
 // ---------------------------------------------------------------------------
 
@@ -120,7 +158,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, showStreamingCur
                 className="message__text"
                 style={{ margin: 0, whiteSpace: 'pre-wrap' }}
               >
-                {part.text}
+                {renderTextWithLinks(part.text)}
                 {showStreamingCursor && i === message.parts.length - 1 && (
                   <StreamingCursor />
                 )}
@@ -163,11 +201,8 @@ export const MessageList: React.FC<MessageListProps> = ({
 
   // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = useCallback(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end',
-      });
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, []);
 
