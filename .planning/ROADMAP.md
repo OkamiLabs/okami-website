@@ -67,7 +67,11 @@ Plans:
   1. A structured test pass covering at minimum: English booking journey, Portuguese or Spanish conversation opener, adversarial prompt (jailbreak attempt), off-topic deflection, and multi-turn context retention — all pass without failures
   2. The widget handles error states gracefully — rate limit hit, spend cap exhausted, and API timeout each surface as a readable message rather than a blank or broken widget
   3. The chatbot is subjectively impressive when reviewed against the "excellent AI product" bar — confident, brand-consistent, and useful on the first message
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 07-01-PLAN.md — Dark Okami widget redesign: rewrite themes.css, glass-card/bare-bubble/pill-input widget.css, bake dark theme into DEFAULT_CONFIG
+- [ ] 07-02-PLAN.md — Typed error differentiation in WidgetChat.tsx (rate_limit / capacity / generic) + build widget to public/widget.js
+- [ ] 07-03-PLAN.md — Author 07-UAT.md (15 scenarios), run manual test pass on preview, flip CHATBOT_ENABLED=1 in production
 **UI hint**: yes
 
 ## Progress
@@ -80,4 +84,4 @@ Plans:
 | 4. Tests & Hygiene | v1.0 | 2/2 | Complete | 2026-05-21 |
 | 5. Foundation + Live AI | v2.0 | 0/3 | Not started | - |
 | 6. System Prompt + Knowledge | v2.0 | 0/2 | Not started | - |
-| 7. QA & Launch Prep | v2.0 | 0/? | Not started | - |
+| 7. QA & Launch Prep | v2.0 | 0/3 | Not started | - |
