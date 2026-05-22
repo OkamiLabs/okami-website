@@ -101,7 +101,7 @@ const StreamingCursor: React.FC = () => (
 // Link-aware text renderer
 // ---------------------------------------------------------------------------
 
-function renderTextWithLinks(text: string, key: number): React.ReactNode {
+function renderTextWithLinks(text: string): React.ReactNode {
   const nodes: React.ReactNode[] = [];
   let last = 0;
   let match: RegExpExecArray | null;
@@ -132,7 +132,7 @@ function renderTextWithLinks(text: string, key: number): React.ReactNode {
   if (last < text.length) {
     nodes.push(text.slice(last));
   }
-  return <React.Fragment key={key}>{nodes}</React.Fragment>;
+  return <>{nodes}</>;
 }
 
 // ---------------------------------------------------------------------------
@@ -158,7 +158,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, showStreamingCur
                 className="message__text"
                 style={{ margin: 0, whiteSpace: 'pre-wrap' }}
               >
-                {renderTextWithLinks(part.text, i)}
+                {renderTextWithLinks(part.text)}
                 {showStreamingCursor && i === message.parts.length - 1 && (
                   <StreamingCursor />
                 )}
