@@ -117,7 +117,7 @@
   right: 0;
   width: var(--widget-max-width);
   height: var(--widget-max-height);
-  background-color: var(--widget-background-color);
+  background: var(--widget-background-color);
   border-radius: var(--widget-border-radius-lg);
   box-shadow: var(--widget-shadow-lg);
   border: 1px solid var(--widget-border-color);
@@ -127,6 +127,14 @@
   animation: widget-slide-up var(--widget-transition-base);
 }
 
+@supports (backdrop-filter: blur(12px)) {
+  .widget-chat {
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
 .okami-widget--bottom-left .widget-chat {
   left: 0;
   right: auto;
@@ -134,8 +142,9 @@
 
 /* Widget Header */
 .widget-chat__header {
-  background-color: var(--widget-primary-color);
-  color: white;
+  background-color: var(--widget-background-color);
+  border-bottom: 1px solid var(--widget-border-color);
+  color: var(--widget-text-color);
   padding: var(--widget-spacing-md);
   display: flex;
   align-items: center;
@@ -190,7 +199,7 @@
 .widget-chat__close {
   background: none;
   border: none;
-  color: white;
+  color: var(--widget-text-color);
   cursor: pointer;
   padding: var(--widget-spacing-xs);
   border-radius: var(--widget-border-radius-sm);
@@ -199,7 +208,7 @@
 }
 
 .widget-chat__close:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .widget-chat__close-icon {
@@ -259,12 +268,12 @@
 
 .message--user .message__bubble {
   background-color: var(--widget-primary-color);
-  color: white;
+  color: #e8e6e1;
   border-bottom-right-radius: var(--widget-border-radius-sm);
 }
 
 .message--bot .message__bubble {
-  background-color: var(--widget-surface-color);
+  background-color: transparent;
   color: var(--widget-text-color);
   border-bottom-left-radius: var(--widget-border-radius-sm);
 }
@@ -363,11 +372,11 @@
   max-height: 120px;
   padding: var(--widget-spacing-sm) var(--widget-spacing-md);
   border: 1px solid var(--widget-border-color);
-  border-radius: var(--widget-border-radius);
+  border-radius: var(--widget-border-radius-full);
   font-family: var(--widget-font-family);
   font-size: var(--widget-font-size-sm);
   color: var(--widget-text-color);
-  background-color: var(--widget-background-color);
+  background-color: var(--widget-surface-color);
   resize: none;
   outline: none;
   transition: border-color var(--widget-transition-fast);
@@ -385,7 +394,7 @@
   width: 40px;
   height: 40px;
   border: none;
-  border-radius: var(--widget-border-radius);
+  border-radius: 12px;
   background-color: var(--widget-primary-color);
   color: white;
   cursor: pointer;
@@ -438,27 +447,12 @@
 
 /* Error States */
 .widget-error {
-  padding: var(--widget-spacing-md);
+  padding: var(--widget-spacing-sm) var(--widget-spacing-md);
   background-color: var(--widget-error-color);
-  color: white;
+  color: var(--widget-text-color);
   text-align: center;
   font-size: var(--widget-font-size-sm);
-}
-
-.widget-error__retry {
-  background: none;
-  border: 1px solid white;
-  color: white;
-  padding: var(--widget-spacing-xs) var(--widget-spacing-sm);
-  border-radius: var(--widget-border-radius-sm);
-  margin-top: var(--widget-spacing-sm);
-  cursor: pointer;
-  font-size: var(--widget-font-size-xs);
-  transition: background-color var(--widget-transition-fast);
-}
-
-.widget-error__retry:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0;
 }
 
 /* Loading States */
