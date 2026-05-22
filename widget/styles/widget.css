@@ -5,17 +5,15 @@
 
 /* Widget Container */
 .okami-widget {
+  /* Reset styles to prevent inheritance from parent site */
+  all: initial;
+  /* Re-declare everything after the reset so position: fixed isn't clobbered */
   position: fixed;
   z-index: var(--widget-z-index);
   font-family: var(--widget-font-family);
   font-size: var(--widget-font-size-base);
   line-height: 1.5;
   color: var(--widget-text-color);
-
-  /* Reset styles to prevent inheritance from parent site */
-  all: initial;
-  font-family: var(--widget-font-family);
-
   /* Prevent text selection on widget chrome (bubbles opt back in below) */
   -webkit-user-select: none;
   -moz-user-select: none;
