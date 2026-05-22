@@ -16,11 +16,18 @@
   all: initial;
   font-family: var(--widget-font-family);
 
-  /* Prevent text selection on widget chrome */
+  /* Prevent text selection on widget chrome (bubbles opt back in below) */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.message__text {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .okami-widget * {
